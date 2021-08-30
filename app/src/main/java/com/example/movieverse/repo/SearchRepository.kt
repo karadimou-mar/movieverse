@@ -7,13 +7,12 @@ import com.example.movieverse.net.search.getSearchService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
 // TODO: maybe we could pass the DAO in the constructor later on
 class SearchRepository() {
 
     suspend fun searchMovie(query: String): NetworkResponse<SearchResponse, ErrorResponse> =
         withContext(Dispatchers.IO) {
             val searchService = getSearchService()
-            searchService.searchMovie(query)
+            searchService.searchMovie(query = query)
         }
 }
