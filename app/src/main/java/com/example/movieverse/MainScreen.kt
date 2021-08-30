@@ -8,16 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.movieverse.databinding.MainScreenBinding
 import com.example.movieverse.net.NetworkResponse
-import com.example.movieverse.net.NetworkResponseAdapterFactory
-import com.example.movieverse.net.search.SearchService
 import com.example.movieverse.viewmodel.SearchViewModelUser
 import com.example.movieverse.viewmodel.activitySearchViewModel
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.create
 
 class MainScreen : Fragment(), SearchViewModelUser {
 
@@ -43,15 +35,6 @@ class MainScreen : Fragment(), SearchViewModelUser {
         searchMovie("harry")
     }
 
-    private fun createRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/")
-            .addCallAdapterFactory(NetworkResponseAdapterFactory())
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .client(client)
-            .build()
-    }
-
     private fun subscribeObservers() {
         searchViewModel.searchMovieResult.observe(viewLifecycleOwner, {
             when (val response1 = it) {
@@ -67,14 +50,7 @@ class MainScreen : Fragment(), SearchViewModelUser {
     }
 
     private fun searchMovie(query: String) {
-        val moshi = Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
-            .build()
-        val okHttpClient = OkHttpClient.Builder().build()
-        val retrofit = createRetrofit(moshi, okHttpClient)
-        val service = retrofit.create<SearchService>()
-
-        searchViewModel.searchMovie(query, service)
+        searchViewModel.searchMovie(query)
     }
 
     override fun onDestroy() {

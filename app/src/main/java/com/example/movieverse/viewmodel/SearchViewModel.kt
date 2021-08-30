@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
-import com.example.movieverse.net.search.SearchService
 import com.example.movieverse.repo.SearchRepository
 import kotlinx.coroutines.launch
 
@@ -19,9 +18,9 @@ class SearchViewModel(
         get() = _searchMovieResult
     private val _searchMovieResult = MutableLiveData<NetworkResponse<SearchResponse, ErrorResponse>>()
 
-    internal fun searchMovie(query: String, searchClient: SearchService) {
+    internal fun searchMovie(query: String) {
         viewModelScope.launch {
-            val search = searchRepository.searchMovie(query, searchClient)
+            val search = searchRepository.searchMovie(query)
             _searchMovieResult.value = search
         }
     }
