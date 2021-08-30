@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.movieverse.databinding.MainScreenBinding
+import com.example.movieverse.databinding.HomeScreenBinding
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.viewmodel.SearchViewModelUser
 import com.example.movieverse.viewmodel.activitySearchViewModel
 
-class MainScreen : Fragment(), SearchViewModelUser {
+class HomeScreen : Fragment(), SearchViewModelUser {
 
-    private var _binding: MainScreenBinding? = null
+    private var _binding: HomeScreenBinding? = null
     private val binding
         get() = _binding!!
 
@@ -24,7 +24,7 @@ class MainScreen : Fragment(), SearchViewModelUser {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = MainScreenBinding.inflate(inflater, container, false)
+        _binding = HomeScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -59,7 +59,7 @@ class MainScreen : Fragment(), SearchViewModelUser {
     }
 
     companion object {
-        private val TAG = MainScreen::class.java.simpleName
+        private val TAG = HomeScreen::class.java.simpleName
     }
 }
 

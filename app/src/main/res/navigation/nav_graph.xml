@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainScreen">
+    app:startDestination="@id/homeScreen">
 
     <fragment
-        android:id="@+id/mainScreen"
-        android:name="com.example.movieverse.MainScreen"
-        android:label="main_screen"
-        tools:layout="@layout/main_screen" />
+        android:id="@+id/homeScreen"
+        android:name="com.example.movieverse.HomeScreen"
+        android:label="home_screen"
+        tools:layout="@layout/home_screen" />
 
 </navigation>
