@@ -9,6 +9,8 @@
 /.idea/assetWizardSettings.xml
 /.idea/dictionaries
 /.idea/kotlinc.xml
+/.idea/gradle.xml
+/.idea/codeStyles/*
 .DS_Store
 /build
 /captures
