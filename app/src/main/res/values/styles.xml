@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Widget.MaterialComponents.TextInputLayout.SearchSection">
+        <item name="colorControlNormal">@android:color/transparent</item>
+        <item name="android:colorControlActivated">@color/colorSecondary</item>
+        <item name="hintTextAppearance">@style/TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle</item>
+        <item name="errorTextAppearance">@style/TextAppearance.MaterialComponents.Caption.TextFieldErrorTextStyle</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle">
+        <item name="android:textColor">@color/textOnSurfaceMediumEmphasis</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Caption.TextFieldErrorTextStyle">
+        <item name="android:textColor">@color/textOnSecondaryHighEmphasis</item>
+        <item name="android:textColorHint">@color/textOnSecondaryMediumEmphasis</item>
+    </style>
+</resources>
