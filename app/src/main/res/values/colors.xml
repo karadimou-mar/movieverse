@@ -9,4 +9,5 @@
     <color name="textOnSecondaryHighEmphasis">#FF000000</color>
     <color name="textOnSecondaryMediumEmphasis">#B3000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#B20000</color>
 </resources>
