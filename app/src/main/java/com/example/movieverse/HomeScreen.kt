@@ -7,9 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.movieverse.adapter.MovieAdapter
 import com.example.movieverse.databinding.HomeScreenBinding
+import com.example.movieverse.model.movie.MovieResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.util.callBackWhileTyping
+import com.example.movieverse.util.hideKeyboard
 import com.example.movieverse.viewmodel.SearchViewModelUser
 import com.example.movieverse.viewmodel.activitySearchViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,6 +29,7 @@ class HomeScreen : Fragment(), SearchViewModelUser {
         get() = _binding!!
 
     private var searchJob: Job? = null
+    private var movieAdapter: MovieAdapter? = null
 
     override val searchViewModel by activitySearchViewModel()
 
@@ -41,11 +46,13 @@ class HomeScreen : Fragment(), SearchViewModelUser {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //setupRecyclerView()
         subscribeObservers()
 
         // search on search icon click
         binding.searchSection.searchIcon.setOnClickListener {
             searchMovie()
+            it.hideKeyboard(context)
         }
         //search also while typing
         //TODO: keep both?
@@ -54,16 +61,18 @@ class HomeScreen : Fragment(), SearchViewModelUser {
 
     private fun subscribeObservers() {
         searchViewModel.searchMovieResult.observe(viewLifecycleOwner, {
-            when (val response1 = it) {
+            when (val response = it) {
                 is NetworkResponse.Success -> {
-                    Log.d(TAG, "Success: ${response1.body.results}")
-                    for (i in response1.body.results) {
-                        binding.dummyTv.append(i.title + "   ")
+                    val movies = response.body.results
+                    setupRecyclerView(movies)
+                    for (m in movies.indices) {
+                        Log.d(TAG, "Success: ${movies[m]}")
                     }
+                    Log.d(TAG, "total results: ${movies.size}")
                 }
                 is NetworkResponse.ApiError -> Log.d(
                     TAG,
-                    "ApiError: statusCode: ${response1.body.statusCode} , statusMsg: ${response1.body.statusMsg}"
+                    "ApiError: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
                 )
                 is NetworkResponse.NetworkError -> Log.d(TAG, "NetworkError")
                 is NetworkResponse.UnknownError -> Log.d(TAG, "UnknownError")
@@ -84,6 +93,14 @@ class HomeScreen : Fragment(), SearchViewModelUser {
     private fun searchMovie() {
         val textToSearch = binding.searchSection.searchInput.text.toString()
         searchViewModel.searchMovie(query = textToSearch)
+    }
+
+    private fun setupRecyclerView(movies: List<MovieResponse>) {
+        binding.moviesList.apply {
+            layoutManager = LinearLayoutManager(activity)
+            movieAdapter = MovieAdapter(movies = movies, context = context)
+            adapter = movieAdapter
+        }
     }
 
     override fun onDestroy() {

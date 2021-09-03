@@ -16,4 +16,13 @@
         <item name="android:textColor">@color/textOnSecondaryHighEmphasis</item>
         <item name="android:textColorHint">@color/textOnSecondaryMediumEmphasis</item>
     </style>
+
+    <style name="TextAppearence.App.TextInputLayout"  parent="@android:style/TextAppearance">
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/inactiveRatingBar</item>
+        <item name="colorControlActivated">@color/activeRatingBar</item>
+    </style>
 </resources>

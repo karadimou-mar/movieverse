@@ -6,7 +6,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.movieverse.databinding.ActivityNavigationBinding
 
-
 class NavigationActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityNavigationBinding

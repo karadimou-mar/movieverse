@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Movieverse</string>
+    <string name="yearOfRelease" translatable="false">(%s)</string>
 </resources>
