@@ -9,9 +9,9 @@ interface SearchViewModelUser {
 }
 
 fun <T> T.activitySearchViewModel()
-        where T: Fragment, T: SearchViewModelUser =
+        where T : Fragment, T : SearchViewModelUser =
     activityViewModels<SearchViewModel> {
-        searchViewModelFactory ?: defaultSearchViewModelFactory()
+        searchViewModelFactory ?: defaultMovieViewModelFactory()
     }
 
 object ViewModelFactories {
