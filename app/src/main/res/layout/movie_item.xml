@@ -49,6 +49,27 @@
         app:layout_constraintTop_toBottomOf="@id/title"
         tools:text="(2000)" />
 
+    <ImageView
+        android:id="@+id/favorite"
+        android:src="@drawable/ic_favorites"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/movieImage"
+        app:layout_constraintTop_toBottomOf="@id/year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/watchLater"
+        android:src="@drawable/ic_watch_later"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toEndOf="@id/favorite"
+        app:layout_constraintTop_toBottomOf="@id/year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
     <RatingBar
         android:id="@+id/ratingBar"
         style="?android:attr/ratingBarStyleSmall"
@@ -71,6 +92,7 @@
         android:fontFamily="sans-serif"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:text="Fantasy, Action"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/movieImage"
         app:layout_constraintTop_toBottomOf="@id/ratingBar"
