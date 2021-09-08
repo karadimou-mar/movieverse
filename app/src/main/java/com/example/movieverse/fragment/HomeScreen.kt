@@ -1,20 +1,20 @@
-package com.example.movieverse
+package com.example.movieverse.fragment
 
-import android.app.ActionBar
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.TextView
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieverse.adapter.MovieAdapter
+import com.example.movieverse.adapter.OnMovieListener
 import com.example.movieverse.databinding.HomeScreenBinding
 import com.example.movieverse.model.movie.MovieResponse
 import com.example.movieverse.net.NetworkResponse
@@ -28,8 +28,9 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 
+@ExperimentalCoroutinesApi
 @FlowPreview
-class HomeScreen : Fragment(), SearchViewModelUser {
+class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
 
     private var _binding: HomeScreenBinding? = null
     private val binding
@@ -49,7 +50,6 @@ class HomeScreen : Fragment(), SearchViewModelUser {
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,6 +62,7 @@ class HomeScreen : Fragment(), SearchViewModelUser {
         // search on search icon click
         binding.searchSection.searchIcon.setOnClickListener {
             searchMovie()
+            getMoviesGenres()
             it.hideKeyboard(context)
         }
         //search also while typing
@@ -74,7 +75,7 @@ class HomeScreen : Fragment(), SearchViewModelUser {
             when (val response = it) {
                 is NetworkResponse.Success -> {
                     val movies = response.body.results
-                    setupRecyclerView(movies, binding.moviesList)
+                    setupRecyclerView(movies, binding.moviesList, requireContext())
                     // remove other movie lists
                     // TODO: improve that part later on
                     visibilityGone(binding.topRatedLyt, binding.upcomingLyt)
@@ -89,8 +90,8 @@ class HomeScreen : Fragment(), SearchViewModelUser {
                     TAG,
                     "ApiError: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
                 )
-                is NetworkResponse.NetworkError -> Log.d(TAG, "NetworkError")
-                is NetworkResponse.UnknownError -> Log.d(TAG, "UnknownError")
+                is NetworkResponse.NetworkError -> Log.d(TAG, "NetworkError: ${response.error.message}")
+                is NetworkResponse.UnknownError -> Log.d(TAG, "UnknownError: ${response.error?.message}")
             }
         })
 
@@ -98,7 +99,7 @@ class HomeScreen : Fragment(), SearchViewModelUser {
             when (val response = it) {
                 is NetworkResponse.Success -> {
                     val movies = response.body.results
-                    setupRecyclerView(movies, binding.moviesList)
+                    setupRecyclerView(movies, binding.moviesList, requireContext())
                     binding.movieLabel.visibility = View.VISIBLE
                     for (m in movies.indices) {
                         Log.d(TAG, "Success: ${movies[m]}")
@@ -118,7 +119,7 @@ class HomeScreen : Fragment(), SearchViewModelUser {
             when (val response = it) {
                 is NetworkResponse.Success -> {
                     val topRatedMovies = response.body.results
-                    setupRecyclerView(topRatedMovies, binding.topRatedList)
+                    setupRecyclerView(topRatedMovies, binding.topRatedList, requireContext())
                     binding.topRatedLabel.visibility = View.VISIBLE
                     for (m in topRatedMovies.indices) {
                         Log.d(TAG, "Top Rated: Success: ${topRatedMovies[m]}")
@@ -138,7 +139,7 @@ class HomeScreen : Fragment(), SearchViewModelUser {
             when (val response = it) {
                 is NetworkResponse.Success -> {
                     val upcomingMovies = response.body.results
-                    setupRecyclerView(upcomingMovies, binding.upcomingList)
+                    setupRecyclerView(upcomingMovies, binding.upcomingList, context)
                     binding.upcomingLabel.visibility = View.VISIBLE
                     for (m in upcomingMovies.indices) {
                         Log.d(TAG, "Upcoming: Success: ${upcomingMovies[m]}")
@@ -153,10 +154,23 @@ class HomeScreen : Fragment(), SearchViewModelUser {
                 is NetworkResponse.UnknownError -> Log.d(TAG, "Upcoming: UnknownError")
             }
         })
+
+        searchViewModel.moviesGenreResponse.observe(viewLifecycleOwner, {
+            when (val response = it) {
+                is NetworkResponse.Success -> {
+                    val genres = response.body
+                    Log.d(TAG, "Success: Genres: $genres")
+                }
+                is NetworkResponse.ApiError -> Log.d(
+                    TAG,
+                    "ApiError: Genre: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
+                )
+                is NetworkResponse.NetworkError -> Log.d(TAG, "Upcoming: NetworkError")
+                is NetworkResponse.UnknownError -> Log.d(TAG, "Upcoming: UnknownError")
+            }
+        })
     }
 
-    @ExperimentalCoroutinesApi
-    @FlowPreview
     private fun searchMovieWhileTyping() {
         searchJob = binding.searchSection.searchInput.callBackWhileTyping {
             it?.let { textToSearch ->
@@ -182,12 +196,24 @@ class HomeScreen : Fragment(), SearchViewModelUser {
         searchViewModel.getUpcomingMovies()
     }
 
-    private fun setupRecyclerView(movies: List<MovieResponse>, recyclerView: RecyclerView) {
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(activity)
-            movieAdapter = MovieAdapter(movies = movies, context = context)
-            adapter = movieAdapter
-        }
+    private fun getMoviesGenres() {
+        searchViewModel.getMoviesGenres()
+    }
+
+    private fun setupRecyclerView(
+        movies: List<MovieResponse>,
+        recyclerView: RecyclerView,
+        context: Context?
+    ) {
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        movieAdapter = MovieAdapter(movies = movies, context = context, onMovieListener = this)
+        recyclerView.adapter = movieAdapter
+    }
+
+    override fun onMovieClick(position: Int) {
+        val movieId = movieAdapter?.getSelectedMovieId(position)?.id
+        val action = movieId?.let { HomeScreenDirections.actionHomeScreenToMovieDetails(selectedMovieId = it) }
+        action?.let { findNavController().navigate(it) }
     }
 
     override fun onDestroy() {

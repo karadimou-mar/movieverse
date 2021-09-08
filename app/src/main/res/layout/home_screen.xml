@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="#000000"
     android:focusableInTouchMode="false"
-    tools:context=".HomeScreen">
+    tools:context=".fragment.HomeScreen">
 
     <include
         android:id="@+id/searchSection"
@@ -45,7 +45,7 @@
 
                 <TextView
                     android:id="@+id/movieLabel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:fontFamily="sans-serif-medium"

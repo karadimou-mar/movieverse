@@ -1,15 +1,15 @@
-package com.example.movieverse
+package com.example.movieverse.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.movieverse.databinding.FavoritesScreenBinding
+import com.example.movieverse.databinding.TheatresScreenBinding
 
-class FavoritesScreen : Fragment() {
+class TheatresScreen : Fragment() {
 
-    private var _binding: FavoritesScreenBinding? = null
+    private var _binding: TheatresScreenBinding? = null
     private val binding
         get() = _binding!!
 
@@ -18,7 +18,7 @@ class FavoritesScreen : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FavoritesScreenBinding.inflate(inflater, container, false)
+        _binding = TheatresScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -28,6 +28,6 @@ class FavoritesScreen : Fragment() {
     }
 
     companion object {
-        private val TAG = FavoritesScreen::class.java.simpleName
+        private val TAG = TheatresScreen::class.java.simpleName
     }
 }

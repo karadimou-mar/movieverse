@@ -7,39 +7,40 @@
 
     <fragment
         android:id="@+id/home"
-        android:name="com.example.movieverse.HomeScreen"
+        android:name="com.example.movieverse.fragment.HomeScreen"
         android:label="home_screen"
-        tools:layout="@layout/home_screen" >
+        tools:layout="@layout/home_screen">
         <action
-            android:id="@+id/action_home_to_favorites"
-            app:destination="@id/favorites" />
+            android:id="@+id/action_HomeScreen_to_MovieDetails"
+            app:destination="@+id/movieDetails" />
     </fragment>
-
 
     <fragment
         android:id="@+id/favorites"
-        android:name="com.example.movieverse.FavoritesScreen"
+        android:name="com.example.movieverse.fragment.FavoritesScreen"
         android:label="favorites_screen"
-        tools:layout="@layout/favorites_screen" >
-        <action
-            android:id="@+id/action_favorites_to_theatres"
-            app:destination="@id/theatres" />
-    </fragment>
+        tools:layout="@layout/favorites_screen" />
 
     <fragment
         android:id="@+id/theatres"
-        android:name="com.example.movieverse.TheatresScreen"
+        android:name="com.example.movieverse.fragment.TheatresScreen"
         android:label="theatres_screen"
-        tools:layout="@layout/theatres_screen" >
-        <action
-            android:id="@+id/action_theatres_to_account"
-            app:destination="@id/favorites" />
-    </fragment>
+        tools:layout="@layout/theatres_screen" />
 
     <fragment
         android:id="@+id/account"
-        android:name="com.example.movieverse.AccountScreen"
+        android:name="com.example.movieverse.fragment.AccountScreen"
         android:label="account_screen"
         tools:layout="@layout/account_screen" />
 
+    <fragment
+        android:id="@+id/movieDetails"
+        android:name="com.example.movieverse.fragment.MovieDetailsScreen"
+        android:label="movie_details_screen"
+        tools:layout="@layout/movie_details_screen" >
+    <argument
+        android:name="selectedMovieId"
+        app:argType="integer"
+        android:defaultValue="-1" />
+    </fragment>
 </navigation>
