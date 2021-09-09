@@ -1,6 +1,7 @@
 package com.example.movieverse
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -26,6 +27,10 @@ class NavigationActivity : AppCompatActivity() {
             binding.bottomNavView,
             navHostFragment!!.navController
         )
+    }
+
+    fun showProgressBar(visibility: Boolean){
+        binding.progressBar.visibility = if (visibility) View.VISIBLE else View.GONE
     }
 
     companion object {

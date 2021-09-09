@@ -11,7 +11,7 @@ interface SearchViewModelUser {
 fun <T> T.activitySearchViewModel()
         where T : Fragment, T : SearchViewModelUser =
     activityViewModels<SearchViewModel> {
-        searchViewModelFactory ?: defaultMovieViewModelFactory()
+        searchViewModelFactory ?: defaultMovieViewModelFactory(requireContext())
     }
 
 object ViewModelFactories {

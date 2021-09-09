@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.movieverse.NavigationActivity
 import com.example.movieverse.adapter.MovieAdapter
 import com.example.movieverse.adapter.OnMovieListener
 import com.example.movieverse.databinding.HomeScreenBinding
@@ -74,6 +75,7 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
         searchViewModel.searchMovieResult.observe(viewLifecycleOwner, {
             when (val response = it) {
                 is NetworkResponse.Success -> {
+                    (activity as NavigationActivity).showProgressBar(false)
                     val movies = response.body.results
                     setupRecyclerView(movies, binding.moviesList, requireContext())
                     // remove other movie lists
@@ -86,18 +88,35 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
                     }
                     Log.d(TAG, "total results: ${movies.size}")
                 }
-                is NetworkResponse.ApiError -> Log.d(
-                    TAG,
-                    "ApiError: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
-                )
-                is NetworkResponse.NetworkError -> Log.d(TAG, "NetworkError: ${response.error.message}")
-                is NetworkResponse.UnknownError -> Log.d(TAG, "UnknownError: ${response.error?.message}")
+                is NetworkResponse.ApiError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(
+                        TAG,
+                        "ApiError: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
+                    )
+
+                }
+                is NetworkResponse.NetworkError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(
+                        TAG,
+                        "NetworkError: ${response.error.message}"
+                    )
+                }
+                is NetworkResponse.UnknownError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(
+                        TAG,
+                        "UnknownError: ${response.error?.message}"
+                    )
+                }
             }
         })
 
         searchViewModel.popularMoviesResult.observe(viewLifecycleOwner, {
             when (val response = it) {
                 is NetworkResponse.Success -> {
+                    (activity as NavigationActivity).showProgressBar(false)
                     val movies = response.body.results
                     setupRecyclerView(movies, binding.moviesList, requireContext())
                     binding.movieLabel.visibility = View.VISIBLE
@@ -106,18 +125,28 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
                     }
                     Log.d(TAG, "total results: ${movies.size}")
                 }
-                is NetworkResponse.ApiError -> Log.d(
-                    TAG,
-                    "ApiError: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
-                )
-                is NetworkResponse.NetworkError -> Log.d(TAG, "NetworkError")
-                is NetworkResponse.UnknownError -> Log.d(TAG, "UnknownError")
+                is NetworkResponse.ApiError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(
+                        TAG,
+                        "ApiError: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
+                    )
+                }
+                is NetworkResponse.NetworkError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(TAG, "NetworkError")
+                }
+                is NetworkResponse.UnknownError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(TAG, "UnknownError")
+                }
             }
         })
 
         searchViewModel.topRatedMoviesResult.observe(viewLifecycleOwner, {
             when (val response = it) {
                 is NetworkResponse.Success -> {
+                    (activity as NavigationActivity).showProgressBar(false)
                     val topRatedMovies = response.body.results
                     setupRecyclerView(topRatedMovies, binding.topRatedList, requireContext())
                     binding.topRatedLabel.visibility = View.VISIBLE
@@ -126,18 +155,29 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
                     }
                     Log.d(TAG, "Top Rated: total results: ${topRatedMovies.size}")
                 }
-                is NetworkResponse.ApiError -> Log.d(
-                    TAG,
-                    "ApiError: Top Rated: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
-                )
-                is NetworkResponse.NetworkError -> Log.d(TAG, "Top Rated: NetworkError")
-                is NetworkResponse.UnknownError -> Log.d(TAG, "Top Rated: UnknownError")
+                is NetworkResponse.ApiError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(
+                        TAG,
+                        "ApiError: Top Rated: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
+                    )
+                }
+                is NetworkResponse.NetworkError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(TAG, "Top Rated: NetworkError")
+
+                }
+                is NetworkResponse.UnknownError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(TAG, "Top Rated: UnknownError")
+                }
             }
         })
 
         searchViewModel.upcomingMoviesResult.observe(viewLifecycleOwner, {
             when (val response = it) {
                 is NetworkResponse.Success -> {
+                    (activity as NavigationActivity).showProgressBar(false)
                     val upcomingMovies = response.body.results
                     setupRecyclerView(upcomingMovies, binding.upcomingList, context)
                     binding.upcomingLabel.visibility = View.VISIBLE
@@ -146,16 +186,25 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
                     }
                     Log.d(TAG, "Upcoming: total results: ${upcomingMovies.size}")
                 }
-                is NetworkResponse.ApiError -> Log.d(
-                    TAG,
-                    "ApiError: Upcoming: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
-                )
-                is NetworkResponse.NetworkError -> Log.d(TAG, "Upcoming: NetworkError")
-                is NetworkResponse.UnknownError -> Log.d(TAG, "Upcoming: UnknownError")
+                is NetworkResponse.ApiError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(
+                        TAG,
+                        "ApiError: Upcoming: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
+                    )
+                }
+                is NetworkResponse.NetworkError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(TAG, "Upcoming: NetworkError")
+                }
+                is NetworkResponse.UnknownError -> {
+                    (activity as NavigationActivity).showProgressBar(false)
+                    Log.d(TAG, "Upcoming: UnknownError")
+                }
             }
         })
 
-        searchViewModel.moviesGenreResponse.observe(viewLifecycleOwner, {
+        searchViewModel.moviesGenreResult.observe(viewLifecycleOwner, {
             when (val response = it) {
                 is NetworkResponse.Success -> {
                     val genres = response.body
@@ -180,6 +229,7 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
     }
 
     private fun searchMovie() {
+        (activity as NavigationActivity).showProgressBar(true)
         val textToSearch = binding.searchSection.searchInput.text.toString()
         searchViewModel.searchMovie(query = textToSearch)
     }
@@ -212,7 +262,8 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
 
     override fun onMovieClick(position: Int) {
         val movieId = movieAdapter?.getSelectedMovieId(position)?.id
-        val action = movieId?.let { HomeScreenDirections.actionHomeScreenToMovieDetails(selectedMovieId = it) }
+        val action =
+            movieId?.let { HomeScreenDirections.actionHomeScreenToMovieDetails(selectedMovieId = it) }
         action?.let { findNavController().navigate(it) }
     }
 
