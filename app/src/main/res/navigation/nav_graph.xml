@@ -37,10 +37,18 @@
         android:id="@+id/movieDetails"
         android:name="com.example.movieverse.fragment.MovieDetailsScreen"
         android:label="movie_details_screen"
-        tools:layout="@layout/movie_details_screen" >
-    <argument
-        android:name="selectedMovieId"
-        app:argType="integer"
-        android:defaultValue="-1" />
+        tools:layout="@layout/movie_details_screen">
+        <argument
+            android:name="selectedMovieId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <argument
+            android:name="selectedMoviePoster"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="selectedMovieTitle"
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
 </navigation>

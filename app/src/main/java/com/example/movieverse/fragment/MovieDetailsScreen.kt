@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.example.movieverse.NavigationActivity
+import com.example.movieverse.R
 import com.example.movieverse.databinding.MovieDetailsScreenBinding
 import com.example.movieverse.net.NetworkResponse
+import com.example.movieverse.util.Constants
+import com.example.movieverse.util.loadImage
 import com.example.movieverse.viewmodel.SearchViewModel
 import com.example.movieverse.viewmodel.SearchViewModelUser
 import com.example.movieverse.viewmodel.activitySearchViewModel
@@ -47,7 +50,13 @@ class MovieDetailsScreen : Fragment(), SearchViewModelUser {
             when (val response = it) {
                 is NetworkResponse.Success -> {
                     (activity as NavigationActivity).showProgressBar(false)
-                    Log.d(TAG, "MovieDetails: Success: ${response.body.overview}")
+                    Log.d(TAG, "MovieDetails: Success: ${response.body}")
+                    binding.view.visibility = View.VISIBLE
+                    binding.movieImage.loadImage(
+                        "${Constants.POSTER_BASE_URL}${args.selectedMoviePoster}",
+                        R.drawable.ic_launcher_foreground
+                    )
+                    binding.title.text = args.selectedMovieTitle
                     binding.overview.text = response.body.overview
                 }
                 is NetworkResponse.ApiError -> {

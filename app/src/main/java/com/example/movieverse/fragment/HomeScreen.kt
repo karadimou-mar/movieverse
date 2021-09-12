@@ -262,8 +262,13 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
 
     override fun onMovieClick(position: Int) {
         val movieId = movieAdapter?.getSelectedMovieId(position)?.id
+        val poster = movieAdapter?.getSelectedMovieId(position)?.posterPath
+        val title = movieAdapter?.getSelectedMovieId(position)?.title
         val action =
-            movieId?.let { HomeScreenDirections.actionHomeScreenToMovieDetails(selectedMovieId = it) }
+            movieId?.let { HomeScreenDirections.actionHomeScreenToMovieDetails(
+                selectedMovieId = it,
+                selectedMoviePoster = poster!!,
+                selectedMovieTitle = title!!) }
         action?.let { findNavController().navigate(it) }
     }
 
