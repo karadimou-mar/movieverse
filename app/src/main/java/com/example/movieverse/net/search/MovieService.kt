@@ -2,6 +2,7 @@ package com.example.movieverse.net.search
 
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
+import com.example.movieverse.model.movie.CreditsResponse
 import com.example.movieverse.model.movie.MovieDetailsResponse
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
@@ -62,4 +63,10 @@ interface MovieService {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = API_KEY,
     ): NetworkResponse<MovieDetailsResponse, ErrorResponse>
+
+    @GET("3//movie/{movie_id}/credits")
+    suspend fun getMovieCast(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY,
+    ): NetworkResponse<CreditsResponse, ErrorResponse>
 }

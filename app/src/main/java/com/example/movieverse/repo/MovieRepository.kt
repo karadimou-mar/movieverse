@@ -2,6 +2,7 @@ package com.example.movieverse.repo
 
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
+import com.example.movieverse.model.movie.CreditsResponse
 import com.example.movieverse.model.movie.MovieDetailsResponse
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
@@ -45,5 +46,11 @@ class MovieRepository() {
         withContext(Dispatchers.IO) {
             val movieService = getMovieService()
             movieService.getMovieDetailsById(movieId)
+        }
+
+    suspend fun getMovieCast(movieId: Int): NetworkResponse<CreditsResponse, ErrorResponse> =
+        withContext(Dispatchers.IO) {
+            val movieService = getMovieService()
+            movieService.getMovieCast(movieId)
         }
 }

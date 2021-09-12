@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
+import com.example.movieverse.model.movie.CreditsResponse
 import com.example.movieverse.model.movie.MovieDetailsResponse
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
@@ -41,6 +42,10 @@ class SearchViewModel(
     val movieDetailsResult: LiveData<NetworkResponse<MovieDetailsResponse, ErrorResponse>>
         get() = _movieDetailsResult
     private val _movieDetailsResult = MutableLiveData<NetworkResponse<MovieDetailsResponse, ErrorResponse>>()
+
+    val castResult: LiveData<NetworkResponse<CreditsResponse, ErrorResponse>>
+        get() = _castResult
+    private val _castResult = MutableLiveData<NetworkResponse<CreditsResponse, ErrorResponse>>()
 
     internal fun searchMovie(query: String) {
         viewModelScope.launch {
@@ -81,6 +86,13 @@ class SearchViewModel(
         viewModelScope.launch {
             val details = movieRepository.getMovieDetailsById(movieId)
             _movieDetailsResult.value = details
+        }
+    }
+
+    internal fun getMovieCast(movieId: Int) {
+        viewModelScope.launch {
+            val cast = movieRepository.getMovieCast(movieId)
+            _castResult.value = cast
         }
     }
 }
