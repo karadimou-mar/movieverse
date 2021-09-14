@@ -10,24 +10,13 @@ import com.example.movieverse.net.search.getMovieService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class MovieRepository() {
+// TODO: split repositories
+class SearchRepository() {
 
     suspend fun searchMovie(query: String): NetworkResponse<SearchResponse, ErrorResponse> =
         withContext(Dispatchers.IO) {
             val movieService = getMovieService()
             movieService.searchMovie(query = query)
-        }
-
-    suspend fun getPopularMovies(): NetworkResponse<SearchResponse, ErrorResponse> =
-        withContext(Dispatchers.IO) {
-            val movieService = getMovieService()
-            movieService.getPopularMovies()
-        }
-
-    suspend fun getTopRatedMovies(): NetworkResponse<SearchResponse, ErrorResponse> =
-        withContext(Dispatchers.IO) {
-            val movieService = getMovieService()
-            movieService.getTopRatedMovies()
         }
 
     suspend fun getUpcomingMovies(): NetworkResponse<SearchResponse, ErrorResponse> =

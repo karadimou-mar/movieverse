@@ -1,103 +1,86 @@
 package com.example.movieverse.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movieverse.model.ErrorResponse
-import com.example.movieverse.model.GenreResponse
-import com.example.movieverse.model.movie.CreditsResponse
+import com.example.movieverse.model.Genre
 import com.example.movieverse.model.movie.MovieDetailsResponse
-import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
-import com.example.movieverse.repo.MovieRepository
+import com.example.movieverse.repo.SearchRepository
 import kotlinx.coroutines.launch
 
-class SearchViewModel(
-    private val movieRepository: MovieRepository
+class MovieViewModel(
+    private val searchRepository: SearchRepository
 ) : ViewModel() {
 
-    // TODO: change types??
-    val searchMovieResult: LiveData<NetworkResponse<SearchResponse, ErrorResponse>>
-        get() = _searchMovieResult
-    private val _searchMovieResult = MutableLiveData<NetworkResponse<SearchResponse, ErrorResponse>>()
+    val showProgressBar: LiveData<Boolean>
+        get() = _showProgressBar
+    private val _showProgressBar = MutableLiveData<Boolean>()
 
-    val popularMoviesResult: LiveData<NetworkResponse<SearchResponse, ErrorResponse>>
-        get() = _popularMoviesResult
-    private val _popularMoviesResult = MutableLiveData<NetworkResponse<SearchResponse, ErrorResponse>>()
-
-    val topRatedMoviesResult: LiveData<NetworkResponse<SearchResponse, ErrorResponse>>
-        get() = _topRatedMoviesResult
-    private val _topRatedMoviesResult = MutableLiveData<NetworkResponse<SearchResponse, ErrorResponse>>()
-
-    val upcomingMoviesResult: LiveData<NetworkResponse<SearchResponse, ErrorResponse>>
-        get() = _upcomingMoviesResult
-    private val _upcomingMoviesResult = MutableLiveData<NetworkResponse<SearchResponse, ErrorResponse>>()
-
-    val moviesGenreResult: LiveData<NetworkResponse<GenreResponse, ErrorResponse>>
+    val moviesGenreResult: LiveData<List<Genre>>
         get() = _moviesGenreResult
-    private val _moviesGenreResult = MutableLiveData<NetworkResponse<GenreResponse, ErrorResponse>>()
+    private val _moviesGenreResult =
+        MutableLiveData<List<Genre>>()
 
-    val movieDetailsResult: LiveData<NetworkResponse<MovieDetailsResponse, ErrorResponse>>
+    val movieDetailsResult: LiveData<MovieDetailsResponse>
         get() = _movieDetailsResult
-    private val _movieDetailsResult = MutableLiveData<NetworkResponse<MovieDetailsResponse, ErrorResponse>>()
-
-    val castResult: LiveData<NetworkResponse<CreditsResponse, ErrorResponse>>
-        get() = _castResult
-    private val _castResult = MutableLiveData<NetworkResponse<CreditsResponse, ErrorResponse>>()
-
-    internal fun searchMovie(query: String) {
-        viewModelScope.launch {
-            val search = movieRepository.searchMovie(query)
-            _searchMovieResult.value = search
-        }
-    }
-
-    internal fun getPopularMovies() {
-        viewModelScope.launch {
-            val search = movieRepository.getPopularMovies()
-            _popularMoviesResult.value = search
-        }
-    }
-
-    internal fun getTopRatedMovies() {
-        viewModelScope.launch {
-            val search = movieRepository.getTopRatedMovies()
-            _topRatedMoviesResult.value = search
-        }
-    }
-
-    internal fun getUpcomingMovies() {
-        viewModelScope.launch {
-            val search = movieRepository.getUpcomingMovies()
-            _upcomingMoviesResult.value = search
-        }
-    }
+    private val _movieDetailsResult =
+        MutableLiveData<MovieDetailsResponse>()
 
     internal fun getMoviesGenres() {
         viewModelScope.launch {
-            val search = movieRepository.getMoviesGenres()
-            _moviesGenreResult.value = search
+            when (val response = searchRepository.getMoviesGenres()) {
+                is NetworkResponse.Success -> {
+                    val genres = response.body.genres
+                    _moviesGenreResult.value = genres
+                    Log.d(TAG, "Genres: Success: $genres")
+                }
+                is NetworkResponse.ApiError ->
+                    Log.d(
+                        TAG,
+                        "Genre: ApiError: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
+                    )
+                is NetworkResponse.NetworkError ->
+                    Log.d(TAG, "Genre: NetworkError: ${response.error.message}")
+                is NetworkResponse.UnknownError ->
+                    Log.d(TAG, "Genre: UnknownError:  ${response.error?.message}")
+            }
         }
     }
 
     internal fun getMovieDetailsById(movieId: Int) {
         viewModelScope.launch {
-            val details = movieRepository.getMovieDetailsById(movieId)
-            _movieDetailsResult.value = details
+            when (val details = searchRepository.getMovieDetailsById(movieId)) {
+                is NetworkResponse.Success -> {
+                    _movieDetailsResult.value = details.body
+                    Log.d(TAG, "MovieDetails: Success: ${details.body}")
+                }
+                is NetworkResponse.ApiError -> {
+                    Log.d(
+                        TAG,
+                        "MovieDetails: ApiError: statusCode: ${details.body.statusCode} , statusMsg: ${details.body.statusMsg}"
+                    )
+                }
+                is NetworkResponse.NetworkError -> {
+                    Log.d(TAG, "MovieDetails: NetworkError: ${details.error.message}")
+                }
+                is NetworkResponse.UnknownError -> {
+                    Log.d(TAG, "MovieDetails: UnknownError: ${details.error?.message}")
+                }
+            }
+            _showProgressBar.value = false
         }
     }
 
-    internal fun getMovieCast(movieId: Int) {
-        viewModelScope.launch {
-            val cast = movieRepository.getMovieCast(movieId)
-            _castResult.value = cast
-        }
+    companion object {
+        private val TAG = SearchViewModel::class.java.simpleName
     }
 }
 
 fun defaultMovieViewModelFactory(context: Context) = factory {
-    val repository = MovieRepository()
-    SearchViewModel(repository)
+    val repository = SearchRepository()
+    MovieViewModel(repository)
 }

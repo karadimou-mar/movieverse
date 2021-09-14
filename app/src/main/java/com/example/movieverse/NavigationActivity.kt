@@ -3,6 +3,7 @@ package com.example.movieverse
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.example.movieverse.databinding.ActivityNavigationBinding
@@ -10,6 +11,9 @@ import com.example.movieverse.databinding.ActivityNavigationBinding
 class NavigationActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityNavigationBinding
+    private val navController by lazy {
+        findNavController(R.id.nav_host_fragment)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,9 @@ class NavigationActivity : AppCompatActivity() {
     fun showProgressBar(visibility: Boolean){
         binding.progressBar.visibility = if (visibility) View.VISIBLE else View.GONE
     }
+
+    override fun onSupportNavigateUp(): Boolean =
+        navController.navigateUp() || super.onSupportNavigateUp()
 
     companion object {
         private val TAG = NavigationActivity::class.java.simpleName

@@ -34,78 +34,27 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/movieLyt"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
                 android:background="#000000"
-                app:layout_constraintBottom_toTopOf="@id/topRatedLyt"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieLyt">
-
-                <TextView
-                    android:id="@+id/movieLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Popular"
-                    android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:visibility="gone"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/moviesList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="20sp"
+                    android:clipToPadding="false"
+                    android:paddingBottom="?actionBarSize"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/movieLabel"
-                    tools:itemCount="2"
-                    tools:listitem="@layout/movie_item"
-                    tools:visibility="visible" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/topRatedLyt"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:background="#000000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/movieLyt">
-
-                <TextView
-                    android:id="@+id/topRatedLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Top Rated"
-                    android:textAllCaps="true"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="visible" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/topRatedList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/topRatedLabel"
                     tools:itemCount="2"
                     tools:listitem="@layout/movie_item"
                     tools:visibility="visible" />
@@ -115,13 +64,16 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/upcomingLyt"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
                 android:background="#000000"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/topRatedLyt">
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible">
 
                 <TextView
                     android:id="@+id/upcomingLabel"
@@ -141,12 +93,14 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/upcomingList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:clipToPadding="false"
+                    android:paddingBottom="?actionBarSize"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/upcomingLabel"
-                    tools:itemCount="2"
+                    tools:itemCount="5"
                     tools:listitem="@layout/movie_item"
                     tools:visibility="visible" />
 
