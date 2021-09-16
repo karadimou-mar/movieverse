@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">Movieverse</string>
     <string name="yearOfRelease" translatable="false">(%s)</string>
+    <!-- Navigation !-->
+    <string name="title_home">Home</string>
+    <string name="title_details">Details</string>
+    <string name="title_theatres">Theatres</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_account">Account</string>
+    <string name="cd_home">Home</string>
+    <string name="cd_favorites">Favorites</string>
+    <string name="cd_theatres">Theatres</string>
+    <string name="cd_account">Account</string>
     <!--Cast member!-->
     <string name="cast_character" translatable="false">as  %s</string>
 </resources>

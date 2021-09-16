@@ -1,6 +1,5 @@
 package com.example.movieverse.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
 import com.example.movieverse.NavigationActivity
 import com.example.movieverse.adapter.MovieAdapter
 import com.example.movieverse.databinding.HomeScreenBinding
-import com.example.movieverse.model.movie.MovieResponse
 import com.example.movieverse.util.*
 import com.example.movieverse.viewmodel.MovieViewModelUser
 import com.example.movieverse.viewmodel.SearchViewModelUser
@@ -30,29 +26,18 @@ import kotlinx.coroutines.flow.launchIn
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
+class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
 
     private var _binding: HomeScreenBinding? = null
     private val binding
         get() = _binding!!
 
     private var searchJob: Job? = null
-    private var movieAdapter: MovieAdapter? = null
+    private var searchAdapter: MovieAdapter? = null
+    private var upcomingAdapter: MovieAdapter? = null
 
     override val searchViewModel by activitySearchViewModel()
     override val movieViewModel by activityMovieViewModel()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        getUpcomingMovies()
-
-//        val onBackPressedCallback = object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//            }
-//        }
-//        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,15 +45,19 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = HomeScreenBinding.inflate(inflater, container, false)
+        sharedElementReturnTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+
+        getUpcomingMovies()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //setupRecyclerView()
+        initAdapters()
         subscribeObservers()
-        //getUpcomingMovies()
+        getUpcomingMovies()
 
         binding.searchSection.searchIcon.setOnClickListener {
             searchMovie()
@@ -78,17 +67,25 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
         //search also while typing
         //TODO: keep both?
         //searchMovieWhileTyping()
+
+        // When user hits back button transition takes backward
+        postponeEnterTransition()
+        binding.upcomingList.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
+        binding.moviesList.doOnPreDraw {
+            startPostponedEnterTransition()
+        }
     }
 
     private fun subscribeObservers() {
-        searchViewModel.searchListResult.observe(viewLifecycleOwner, {
+        searchViewModel.searchListResult.observe(viewLifecycleOwner, { movies ->
             toggleVisibilities(binding.movieLyt, binding.upcomingLyt)
-            setupRecyclerView(it, binding.moviesList, requireContext())
+            searchAdapter?.submit(movies)
         })
 
-        searchViewModel.upcomingListResult.observe(viewLifecycleOwner, {
-            toggleVisibilities(binding.upcomingLyt, binding.movieLyt)
-            setupRecyclerView(it, binding.upcomingList, requireContext())
+        searchViewModel.upcomingListResult.observe(viewLifecycleOwner, { movies ->
+            upcomingAdapter?.submit(movies)
         })
 
         searchViewModel.showProgressBar.observe(viewLifecycleOwner, {
@@ -120,26 +117,64 @@ class HomeScreen : Fragment(), SearchViewModelUser, OnMovieListener {
         movieViewModel.getMoviesGenres()
     }
 
-    private fun setupRecyclerView(
-        movies: List<MovieResponse>,
-        recyclerView: RecyclerView,
-        context: Context?
-    ) {
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        movieAdapter = MovieAdapter(movies = movies, context = context, onMovieListener = this)
-        recyclerView.adapter = movieAdapter
+    private fun initAdapters() {
+        searchAdapter = MovieAdapter(context, searchItemListener)
+        binding.moviesList.initRecyclerView(customAdapter = searchAdapter)
+        upcomingAdapter = MovieAdapter(context, upcomingItemListener)
+        binding.upcomingList.initRecyclerView(customAdapter = upcomingAdapter)
+
     }
 
-    override fun onMovieClick(position: Int) {
-        val movieId = movieAdapter?.getSelectedMovieId(position)?.id
-        val poster = movieAdapter?.getSelectedMovieId(position)?.posterPath
-        val title = movieAdapter?.getSelectedMovieId(position)?.title
-        val action =
-            movieId?.let { HomeScreenDirections.actionHomeScreenToMovieDetails(
-                selectedMovieId = it,
-                selectedMoviePoster = poster!!,
-                selectedMovieTitle = title!!) }
-        action?.let { findNavController().navigate(it) }
+//    override fun onMovieClick(position: Int) {
+//        val movieId = movieAdapter?.getSelectedMovieId(position)?.id
+//        val poster = movieAdapter?.getSelectedMovieId(position)?.posterPath
+//        val title = movieAdapter?.getSelectedMovieId(position)?.title
+//        val action =
+//            movieId?.let { HomeScreenDirections.actionHomeScreenToMovieDetails(
+//                selectedMovieId = it,
+//                selectedMoviePoster = poster!!,
+//                selectedMovieTitle = title!!) }
+//        action?.let { findNavController().navigate(it) }
+//    }
+
+    private val searchItemListener = MovieAdapter.OnClickListener { position, poster ->
+        val movieId = searchAdapter?.getSelectedMovie(position)?.id
+        val imagePoster = searchAdapter?.getSelectedMovie(position)?.posterPath
+        val title = searchAdapter?.getSelectedMovie(position)?.title
+
+        val direction: NavDirections? =
+            movieId?.let {
+                HomeScreenDirections.actionHomeScreenToMovieDetails(
+                    selectedMovieId = it,
+                    selectedMoviePoster = imagePoster!!,
+                    selectedMovieTitle = title!!
+                )
+            }
+
+        val extras = FragmentNavigatorExtras(
+            poster to imagePoster!!
+        )
+        direction?.let { findNavController().navigate(it, extras) }
+    }
+
+    private val upcomingItemListener = MovieAdapter.OnClickListener { position, poster ->
+        val movieId = upcomingAdapter?.getSelectedMovie(position)?.id
+        val imagePoster = upcomingAdapter?.getSelectedMovie(position)?.posterPath
+        val title = upcomingAdapter?.getSelectedMovie(position)?.title
+
+        val direction: NavDirections? =
+            movieId?.let {
+                HomeScreenDirections.actionHomeScreenToMovieDetails(
+                    selectedMovieId = it,
+                    selectedMoviePoster = imagePoster!!,
+                    selectedMovieTitle = title!!
+                )
+            }
+
+        val extras = FragmentNavigatorExtras(
+            poster to imagePoster!!
+        )
+        direction?.let { findNavController().navigate(it, extras) }
     }
 
     override fun onDestroy() {

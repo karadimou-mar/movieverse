@@ -3,15 +3,28 @@ package com.example.movieverse.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieverse.databinding.CastItemBinding
 import com.example.movieverse.model.movie.CastResponse
 
 class CastAdapter(
-    private val cast: List<CastResponse>? = null,
     private val context: Context?
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CastResponse>() {
+        override fun areItemsTheSame(oldItem: CastResponse, newItem: CastResponse): Boolean {
+            return oldItem.castId == newItem.castId
+        }
+
+        override fun areContentsTheSame(oldItem: CastResponse, newItem: CastResponse): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return CastViewHolder(
@@ -26,10 +39,14 @@ class CastAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CastViewHolder -> {
-                cast?.get(position)?.let { holder.bind(it, context) }
+                holder.bind(differ.currentList[position], context)
             }
         }
     }
 
-    override fun getItemCount(): Int = cast?.size ?: 0
+    override fun getItemCount(): Int = differ.currentList.size
+
+    fun submit(list: List<CastResponse>) {
+        differ.submitList(list)
+    }
 }

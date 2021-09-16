@@ -5,6 +5,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
@@ -82,4 +83,26 @@ fun View.hideKeyboard(context: Context?) {
     val inputMethodManager =
         context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
+}
+
+fun RecyclerView.initRecyclerView(
+    @DrawableRes drawableRes: Int? = null,
+    customAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?
+) {
+    // TODO: maybe add the divider here and remove from layout
+    layoutManager = LinearLayoutManager(context)
+    customAdapter?.let {
+        adapter = it
+    }
+}
+
+fun RecyclerView.initHorizontalRecyclerView(
+    @DrawableRes drawableRes: Int? = null,
+    customAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?
+) {
+    // TODO: maybe add the divider here and remove from layout
+    layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+    customAdapter?.let {
+        adapter = it
+    }
 }

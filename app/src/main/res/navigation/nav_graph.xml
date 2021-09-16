@@ -1,55 +1,13 @@
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home">
+    app:startDestination="@+id/home">
 
-<!--    TODO: Add anims-->
+    <include app:graph="@navigation/home"/>
+    <include app:graph="@navigation/favorites"/>
+    <include app:graph="@navigation/theatres"/>
+    <include app:graph="@navigation/account"/>
 
-    <fragment
-        android:id="@+id/home"
-        android:name="com.example.movieverse.fragment.HomeScreen"
-        android:label="home_screen"
-        tools:layout="@layout/home_screen">
-        <action
-            android:id="@+id/action_HomeScreen_to_MovieDetails"
-            app:destination="@+id/movieDetails" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/favorites"
-        android:name="com.example.movieverse.fragment.FavoritesScreen"
-        android:label="favorites_screen"
-        tools:layout="@layout/favorites_screen" />
-
-    <fragment
-        android:id="@+id/theatres"
-        android:name="com.example.movieverse.fragment.TheatresScreen"
-        android:label="theatres_screen"
-        tools:layout="@layout/theatres_screen" />
-
-    <fragment
-        android:id="@+id/account"
-        android:name="com.example.movieverse.fragment.AccountScreen"
-        android:label="account_screen"
-        tools:layout="@layout/account_screen" />
-
-    <fragment
-        android:id="@+id/movieDetails"
-        android:name="com.example.movieverse.fragment.MovieDetailsScreen"
-        android:label="movie_details_screen"
-        tools:layout="@layout/movie_details_screen">
-        <argument
-            android:name="selectedMovieId"
-            android:defaultValue="-1"
-            app:argType="integer" />
-        <argument
-            android:name="selectedMoviePoster"
-            android:defaultValue=""
-            app:argType="string" />
-        <argument
-            android:name="selectedMovieTitle"
-            android:defaultValue=""
-            app:argType="string" />
-    </fragment>
 </navigation>

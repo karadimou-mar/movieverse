@@ -17,7 +17,7 @@ class CastViewHolder(
         // TODO find a way to remove context from here
         binding.memberImage.loadImage(
             "${POSTER_BASE_URL}${cast.profilePath}",
-            R.drawable.ic_launcher_foreground
+            R.drawable.ic_default_black
         )
         binding.memberName.text = cast.name
         binding.character.text = context?.getString(R.string.cast_character, cast.character)

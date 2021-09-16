@@ -3,16 +3,30 @@ package com.example.movieverse.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieverse.databinding.MovieItemBinding
 import com.example.movieverse.model.movie.MovieResponse
 
 class MovieAdapter(
-    private val movies: List<MovieResponse>? = null,
     private val context: Context?,
-    private val onMovieListener: OnMovieListener
+    private val onMovieListener: OnClickListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieResponse>() {
+        override fun areItemsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: MovieResponse, newItem: MovieResponse): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return MovieViewHolder(
@@ -28,21 +42,32 @@ class MovieAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is MovieViewHolder -> {
-                movies?.get(position)?.let { holder.bind(it, context) }
+                holder.bind(differ.currentList[position], context)
             }
         }
     }
 
-    override fun getItemCount(): Int = movies?.size ?: 0
+    override fun getItemCount(): Int = differ.currentList.size
 
-    fun getSelectedMovieId(position: Int): MovieResponse {
-        if (movies?.isNotEmpty() == true) {
-            return movies[position]
+    fun submit(list: List<MovieResponse>) {
+        differ.submitList(list)
+    }
+
+    fun getSelectedMovie(position: Int): MovieResponse {
+        if (differ.currentList.isNotEmpty()) {
+            return differ.currentList[position]
         }
         return MovieResponse(
             -1, "", false,
             "", "", emptyList(), "", "",
             "", "", 0.0, -1, false, 0.0
         )
+    }
+
+    class OnClickListener(val clickListener: (Int, ImageView) -> Unit) {
+        fun onMovieClick(
+            position: Int,
+            poster: ImageView
+        ) = clickListener(position, poster)
     }
 }

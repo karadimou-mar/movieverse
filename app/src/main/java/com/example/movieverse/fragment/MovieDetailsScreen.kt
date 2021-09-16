@@ -1,22 +1,19 @@
 package com.example.movieverse.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionInflater
 import com.example.movieverse.NavigationActivity
 import com.example.movieverse.R
 import com.example.movieverse.adapter.CastAdapter
 import com.example.movieverse.databinding.MovieDetailsScreenBinding
-import com.example.movieverse.model.movie.CastResponse
-import com.example.movieverse.util.Constants
-import com.example.movieverse.util.loadImage
+import com.example.movieverse.util.*
 import com.example.movieverse.viewmodel.*
 import java.util.concurrent.TimeUnit
 
@@ -38,15 +35,20 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
         savedInstanceState: Bundle?
     ): View {
         _binding = MovieDetailsScreenBinding.inflate(inflater, container, false)
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        postponeEnterTransition(250, TimeUnit.MILLISECONDS)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initAdapters()
         subscribeObservers()
         getMovieDetailsById(args.selectedMovieId)
         getMovieCast(args.selectedMovieId)
+        //setupBackButton()
 
         // for shared element transition
         binding.movieImage.transitionName = args.selectedMoviePoster
@@ -58,12 +60,12 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
             if (it != null) {
                 binding.view.visibility = View.VISIBLE
                 binding.overview.visibility = View.VISIBLE
+                binding.overview.text = it.overview
                 binding.movieImage.loadImage(
                     "${Constants.POSTER_BASE_URL}${args.selectedMoviePoster}",
                     R.drawable.ic_default_black
                 )
                 binding.title.text = args.selectedMovieTitle
-                binding.overview.text = it.overview
             }
         })
 
@@ -72,7 +74,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
             if (!it.cast.isNullOrEmpty()) {
                 binding.view.visibility = View.VISIBLE
                 binding.castLabel.visibility = View.VISIBLE
-                setupRecyclerView(it.cast, binding.castList, requireActivity())
+                castAdapter?.submit(it.cast)
             }
         })
 
@@ -81,15 +83,9 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
         })
     }
 
-    private fun setupRecyclerView(
-        cast: List<CastResponse>,
-        recyclerView: RecyclerView?,
-        context: Context?
-    ) {
-        recyclerView?.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        castAdapter = CastAdapter(cast = cast, context = context)
-        recyclerView?.adapter = castAdapter
+    private fun initAdapters() {
+        castAdapter = CastAdapter(context)
+        binding.castList.initHorizontalRecyclerView(customAdapter = castAdapter)
     }
 
     private fun getMovieDetailsById(movieId: Int) {
@@ -105,6 +101,14 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun setupBackButton() {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+//          movieViewModel.isBackFromDetails(true)
+//          Log.d(TAG, "callback back pressed: ${movieViewModel.isBackFromDetails.value}")
+            findNavController().popBackStack()
+        }
     }
 
     companion object {

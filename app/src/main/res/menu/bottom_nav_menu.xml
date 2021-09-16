@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <!--    TODO: add/remove title later on-->
     <item
         android:id="@+id/home"
-        android:enabled="true"
+        android:contentDescription="@string/cd_home"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
-
+        android:title="@string/title_home" />
     <item
         android:id="@+id/favorites"
-        android:enabled="true"
+        android:contentDescription="@string/cd_favorites"
         android:icon="@drawable/ic_favorites"
-        android:title="Favorites" />
-
+        android:title="@string/title_favorites" />
     <item
         android:id="@+id/theatres"
-        android:enabled="true"
+        android:contentDescription="@string/cd_theatres"
         android:icon="@drawable/ic_theaters"
-        android:title="In theatres" />
-
+        android:title="@string/title_theatres" />
     <item
         android:id="@+id/account"
-        android:enabled="true"
+        android:contentDescription="@string/cd_account"
         android:icon="@drawable/ic_account"
-        android:title="Account" />
+        android:title="@string/title_account" />
 
 </menu>

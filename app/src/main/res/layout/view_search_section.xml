@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#000000">
-
+    <!--TODO: needs improvement-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/searchLyt"
         android:layout_width="0dp"
@@ -19,15 +19,17 @@
             android:id="@+id/searchInput"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="-10dp"
             android:background="@android:color/transparent"
             android:backgroundTint="#000000"
+            android:cursorVisible="true"
             android:fontFamily="sans-serif-medium"
             android:hint="Search for a movie"
-            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:inputType="textNoSuggestions"
             android:maxLines="1"
             android:textColor="@color/white"
-            android:textColorHint="@color/red"
+            android:textColorHint="@color/input_edit_text_selector"
+            android:textCursorDrawable="@null"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 

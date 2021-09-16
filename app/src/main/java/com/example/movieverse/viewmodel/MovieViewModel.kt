@@ -30,6 +30,14 @@ class MovieViewModel(
     private val _movieDetailsResult =
         MutableLiveData<MovieDetailsResponse>()
 
+    val isDetailsShown: LiveData<Boolean>
+        get() = _isDetailsShown
+    private val _isDetailsShown = MutableLiveData<Boolean>(false)
+
+    val isBackFromDetails: LiveData<Boolean>
+        get() = _isBackFromDetails
+    private val _isBackFromDetails = MutableLiveData(false)
+
     internal fun getMoviesGenres() {
         viewModelScope.launch {
             when (val response = searchRepository.getMoviesGenres()) {
@@ -38,15 +46,18 @@ class MovieViewModel(
                     _moviesGenreResult.value = genres
                     Log.d(TAG, "Genres: Success: $genres")
                 }
-                is NetworkResponse.ApiError ->
+                is NetworkResponse.ApiError -> {
                     Log.d(
                         TAG,
                         "Genre: ApiError: statusCode: ${response.body.statusCode} , statusMsg: ${response.body.statusMsg}"
                     )
-                is NetworkResponse.NetworkError ->
+                }
+                is NetworkResponse.NetworkError -> {
                     Log.d(TAG, "Genre: NetworkError: ${response.error.message}")
-                is NetworkResponse.UnknownError ->
+                }
+                is NetworkResponse.UnknownError -> {
                     Log.d(TAG, "Genre: UnknownError:  ${response.error?.message}")
+                }
             }
         }
     }
@@ -73,6 +84,10 @@ class MovieViewModel(
             }
             _showProgressBar.value = false
         }
+    }
+
+    internal fun isBackFromDetails(bool: Boolean) {
+        _isBackFromDetails.value = bool
     }
 
     companion object {
