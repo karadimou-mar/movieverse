@@ -48,7 +48,7 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
         sharedElementReturnTransition =
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 
-        getUpcomingMovies()
+        //getUpcomingMovies()
         return binding.root
     }
 
@@ -124,18 +124,6 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
         binding.upcomingList.initRecyclerView(customAdapter = upcomingAdapter)
 
     }
-
-//    override fun onMovieClick(position: Int) {
-//        val movieId = movieAdapter?.getSelectedMovieId(position)?.id
-//        val poster = movieAdapter?.getSelectedMovieId(position)?.posterPath
-//        val title = movieAdapter?.getSelectedMovieId(position)?.title
-//        val action =
-//            movieId?.let { HomeScreenDirections.actionHomeScreenToMovieDetails(
-//                selectedMovieId = it,
-//                selectedMoviePoster = poster!!,
-//                selectedMovieTitle = title!!) }
-//        action?.let { findNavController().navigate(it) }
-//    }
 
     private val searchItemListener = MovieAdapter.OnClickListener { position, poster ->
         val movieId = searchAdapter?.getSelectedMovie(position)?.id

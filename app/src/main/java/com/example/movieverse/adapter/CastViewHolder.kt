@@ -9,7 +9,8 @@ import com.example.movieverse.util.Constants.POSTER_BASE_URL
 import com.example.movieverse.util.loadImage
 
 class CastViewHolder(
-    private val binding: CastItemBinding
+    private val binding: CastItemBinding,
+    private val onCastListener: CastAdapter.OnClickListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(cast: CastResponse, context: Context?) {
@@ -21,5 +22,9 @@ class CastViewHolder(
         )
         binding.memberName.text = cast.name
         binding.character.text = context?.getString(R.string.cast_character, cast.character)
+
+        itemView.setOnClickListener {
+            onCastListener.onMovieClick(adapterPosition)
+        }
     }
 }

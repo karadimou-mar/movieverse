@@ -10,7 +10,8 @@ import com.example.movieverse.databinding.CastItemBinding
 import com.example.movieverse.model.movie.CastResponse
 
 class CastAdapter(
-    private val context: Context?
+    private val context: Context?,
+    private val onCastListener: OnClickListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -32,7 +33,8 @@ class CastAdapter(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            onCastListener
         )
     }
 
@@ -48,5 +50,11 @@ class CastAdapter(
 
     fun submit(list: List<CastResponse>) {
         differ.submitList(list)
+    }
+
+    class OnClickListener(val clickListener: (Int) -> Unit) {
+        fun onMovieClick(
+            position: Int
+        ) = clickListener(position)
     }
 }

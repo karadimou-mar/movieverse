@@ -20,6 +20,9 @@
         android:name="com.example.movieverse.fragment.MovieDetailsScreen"
         android:label="@string/title_details"
         tools:layout="@layout/movie_details_screen">
+        <action
+            android:id="@+id/action_MovieDetailsScreen_to_CastDetailsScreen"
+            app:destination="@+id/castDetails" />
         <argument
             android:name="selectedMovieId"
             android:defaultValue="-1"
@@ -36,4 +39,9 @@
             android:id="@+id/action_MovieDetailsScreen_to_HomeScreen"
             app:destination="@+id/home" />
     </fragment>
+    <fragment
+        android:id="@+id/castDetails"
+        android:name="com.example.movieverse.fragment.CastDetailsScreen"
+        android:label="@string/title_cast_details"
+        tools:layout="@layout/cast_details_screen" />
 </navigation>

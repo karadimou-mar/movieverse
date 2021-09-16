@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
@@ -84,8 +84,15 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
     }
 
     private fun initAdapters() {
-        castAdapter = CastAdapter(context)
+        castAdapter = CastAdapter(context, castDetailsItemListener)
         binding.castList.initHorizontalRecyclerView(customAdapter = castAdapter)
+    }
+
+    private val castDetailsItemListener = CastAdapter.OnClickListener { position ->
+        val directions: NavDirections =
+            MovieDetailsScreenDirections.actionMovieDetailsScreenToCastDetailsScreen()
+
+        directions.let { findNavController().navigate(it) }
     }
 
     private fun getMovieDetailsById(movieId: Int) {
@@ -101,14 +108,6 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
-
-    private fun setupBackButton() {
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-//          movieViewModel.isBackFromDetails(true)
-//          Log.d(TAG, "callback back pressed: ${movieViewModel.isBackFromDetails.value}")
-            findNavController().popBackStack()
-        }
     }
 
     companion object {
