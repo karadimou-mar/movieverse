@@ -84,7 +84,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
     }
 
     private fun initAdapters() {
-        castAdapter = CastAdapter(context, castDetailsItemListener)
+        castAdapter = CastAdapter(castDetailsItemListener)
         binding.castList.initHorizontalRecyclerView(customAdapter = castAdapter)
     }
 

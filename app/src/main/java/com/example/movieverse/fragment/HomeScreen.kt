@@ -118,9 +118,9 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
     }
 
     private fun initAdapters() {
-        searchAdapter = MovieAdapter(context, searchItemListener)
+        searchAdapter = MovieAdapter(searchItemListener)
         binding.moviesList.initRecyclerView(customAdapter = searchAdapter)
-        upcomingAdapter = MovieAdapter(context, upcomingItemListener)
+        upcomingAdapter = MovieAdapter(upcomingItemListener)
         binding.upcomingList.initRecyclerView(customAdapter = upcomingAdapter)
 
     }

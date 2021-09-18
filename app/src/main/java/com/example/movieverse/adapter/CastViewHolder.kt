@@ -1,6 +1,5 @@
 package com.example.movieverse.adapter
 
-import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieverse.R
 import com.example.movieverse.databinding.CastItemBinding
@@ -13,7 +12,7 @@ class CastViewHolder(
     private val onCastListener: CastAdapter.OnClickListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(cast: CastResponse, context: Context?) {
+    fun bind(cast: CastResponse) {
         // TODO remove MovieDetailsResponse and add Movie data class
         // TODO find a way to remove context from here
         binding.memberImage.loadImage(
@@ -21,7 +20,7 @@ class CastViewHolder(
             R.drawable.ic_default_black
         )
         binding.memberName.text = cast.name
-        binding.character.text = context?.getString(R.string.cast_character, cast.character)
+        binding.character.text = binding.character.context?.getString(R.string.cast_character, cast.character)
 
         itemView.setOnClickListener {
             onCastListener.onMovieClick(adapterPosition)

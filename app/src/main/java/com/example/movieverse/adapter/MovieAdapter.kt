@@ -1,6 +1,5 @@
 package com.example.movieverse.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -11,7 +10,6 @@ import com.example.movieverse.databinding.MovieItemBinding
 import com.example.movieverse.model.movie.MovieResponse
 
 class MovieAdapter(
-    private val context: Context?,
     private val onMovieListener: OnClickListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -42,7 +40,7 @@ class MovieAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is MovieViewHolder -> {
-                holder.bind(differ.currentList[position], context)
+                holder.bind(differ.currentList[position])
             }
         }
     }

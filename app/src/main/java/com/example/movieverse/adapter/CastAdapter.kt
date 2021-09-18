@@ -1,6 +1,5 @@
 package com.example.movieverse.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -10,7 +9,6 @@ import com.example.movieverse.databinding.CastItemBinding
 import com.example.movieverse.model.movie.CastResponse
 
 class CastAdapter(
-    private val context: Context?,
     private val onCastListener: OnClickListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -41,7 +39,7 @@ class CastAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CastViewHolder -> {
-                holder.bind(differ.currentList[position], context)
+                holder.bind(differ.currentList[position])
             }
         }
     }
