@@ -20,6 +20,8 @@ data class CreditsResponse(
 data class CastResponse(
     @Json(name = "cast_id")
     val castId: Int?,
+    @Json(name = "id")
+    val personId: Int?,
     @Json(name = "known_for_department")
     val department: String,
     val name: String,

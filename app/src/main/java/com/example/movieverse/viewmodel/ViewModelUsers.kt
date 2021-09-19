@@ -2,7 +2,7 @@ package com.example.movieverse.viewmodel
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.movieverse.viewmodel.ViewModelFactories.actorViewModelFactory
+import com.example.movieverse.viewmodel.ViewModelFactories.castViewModelFactory
 import com.example.movieverse.viewmodel.ViewModelFactories.movieViewModelFactory
 import com.example.movieverse.viewmodel.ViewModelFactories.searchViewModelFactory
 
@@ -14,8 +14,8 @@ interface MovieViewModelUser {
     val movieViewModel: MovieViewModel
 }
 
-interface ActorViewModelUser {
-    val actorViewModel: ActorViewModel
+interface CastViewModelUser {
+    val castViewModel: CastViewModel
 }
 
 fun <T> T.activitySearchViewModel()
@@ -30,14 +30,14 @@ fun <T> T.activityMovieViewModel()
         movieViewModelFactory ?: defaultMovieViewModelFactory(requireContext())
     }
 
-fun <T> T.activityActorViewModel()
-        where T : Fragment, T : ActorViewModelUser =
-    activityViewModels<ActorViewModel> {
-        actorViewModelFactory ?: defaultActorViewModelFactory(requireContext())
+fun <T> T.activityCastViewModel()
+        where T : Fragment, T : CastViewModelUser =
+    activityViewModels<CastViewModel> {
+        castViewModelFactory ?: defaultCastViewModelFactory(requireContext())
     }
 
 object ViewModelFactories {
     var searchViewModelFactory: ViewModelFactory<SearchViewModel>? = null
     var movieViewModelFactory: ViewModelFactory<MovieViewModel>? = null
-    var actorViewModelFactory: ViewModelFactory<ActorViewModel>? = null
+    var castViewModelFactory: ViewModelFactory<CastViewModel>? = null
 }

@@ -17,7 +17,7 @@ import com.example.movieverse.util.*
 import com.example.movieverse.viewmodel.*
 import java.util.concurrent.TimeUnit
 
-class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
+class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
 
     private var _binding: MovieDetailsScreenBinding? = null
     private val binding
@@ -25,7 +25,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
 
     private val args: MovieDetailsScreenArgs by navArgs()
     override val movieViewModel: MovieViewModel by activityMovieViewModel()
-    override val actorViewModel: ActorViewModel by activityActorViewModel()
+    override val castViewModel: CastViewModel by activityCastViewModel()
     private var castAdapter: CastAdapter? = null
 
 
@@ -69,7 +69,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
             }
         })
 
-        actorViewModel.castResult.observe(viewLifecycleOwner, {
+        castViewModel.castResult.observe(viewLifecycleOwner, {
             // TODO: check for when it == null
             if (!it.cast.isNullOrEmpty()) {
                 binding.view.visibility = View.VISIBLE
@@ -89,10 +89,19 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
     }
 
     private val castDetailsItemListener = CastAdapter.OnClickListener { position ->
-        val directions: NavDirections =
-            MovieDetailsScreenDirections.actionMovieDetailsScreenToCastDetailsScreen()
+        val personId = castAdapter?.getSelectedPerson(position)?.personId
 
-        directions.let { findNavController().navigate(it) }
+        val directions: NavDirections? =
+            personId?.let {
+                MovieDetailsScreenDirections.actionMovieDetailsScreenToCastDetailsScreen(
+                    selectedPersonId = it
+                )
+            }
+        directions.let {
+            if (it != null) {
+                findNavController().navigate(it)
+            }
+        }
     }
 
     private fun getMovieDetailsById(movieId: Int) {
@@ -102,7 +111,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, ActorViewModelUser {
 
     private fun getMovieCast(movieId: Int) {
         (activity as NavigationActivity).showProgressBar(true)
-        actorViewModel.getMovieCast(movieId)
+        castViewModel.getMovieCast(movieId)
     }
 
     override fun onDestroy() {

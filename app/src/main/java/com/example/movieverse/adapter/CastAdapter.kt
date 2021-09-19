@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieverse.databinding.CastItemBinding
 import com.example.movieverse.model.movie.CastResponse
+import com.example.movieverse.model.movie.MovieResponse
 
 class CastAdapter(
     private val onCastListener: OnClickListener
@@ -48,6 +49,16 @@ class CastAdapter(
 
     fun submit(list: List<CastResponse>) {
         differ.submitList(list)
+    }
+
+    fun getSelectedPerson(position: Int): CastResponse {
+        if (differ.currentList.isNotEmpty()) {
+            return differ.currentList[position]
+        }
+        return CastResponse(
+            -1, -1,"", "",
+            "", ""
+        )
     }
 
     class OnClickListener(val clickListener: (Int) -> Unit) {
