@@ -127,40 +127,39 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
 
     private val searchItemListener = MovieAdapter.OnClickListener { position, poster ->
         val movieId = searchAdapter?.getSelectedMovie(position)?.id
-        val imagePoster = searchAdapter?.getSelectedMovie(position)?.posterPath
+        val imagePoster = searchAdapter?.getSelectedMovie(position)?.posterPath.valueOrEmpty()
         val title = searchAdapter?.getSelectedMovie(position)?.title
 
         val direction: NavDirections? =
             movieId?.let {
                 HomeScreenDirections.actionHomeScreenToMovieDetails(
                     selectedMovieId = it,
-                    selectedMoviePoster = imagePoster!!,
+                    selectedMoviePoster = imagePoster,
                     selectedMovieTitle = title!!
                 )
             }
-
         val extras = FragmentNavigatorExtras(
-            poster to imagePoster!!
+            poster to imagePoster
         )
         direction?.let { findNavController().navigate(it, extras) }
     }
 
     private val upcomingItemListener = MovieAdapter.OnClickListener { position, poster ->
         val movieId = upcomingAdapter?.getSelectedMovie(position)?.id
-        val imagePoster = upcomingAdapter?.getSelectedMovie(position)?.posterPath
-        val title = upcomingAdapter?.getSelectedMovie(position)?.title
+        val imagePoster = upcomingAdapter?.getSelectedMovie(position)?.posterPath.valueOrEmpty()
+        val title = upcomingAdapter?.getSelectedMovie(position)?.title.valueOrEmpty()
 
         val direction: NavDirections? =
             movieId?.let {
                 HomeScreenDirections.actionHomeScreenToMovieDetails(
                     selectedMovieId = it,
-                    selectedMoviePoster = imagePoster!!,
-                    selectedMovieTitle = title!!
+                    selectedMoviePoster = imagePoster,
+                    selectedMovieTitle = title
                 )
             }
 
         val extras = FragmentNavigatorExtras(
-            poster to imagePoster!!
+            poster to imagePoster
         )
         direction?.let { findNavController().navigate(it, extras) }
     }

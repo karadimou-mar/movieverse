@@ -7,14 +7,14 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MovieResponse(
     @Json(name = "id")
-    val id: Int,
+    val id: Int?,
     @Json(name = "poster_path")
     val posterPath: String?,
     @Json(name = "adult")
     val isAdultMovie: Boolean,
     val overview: String,
     @Json(name = "release_date")
-    val releaseDate: String,
+    val releaseDate: String?,
     @Json(name = "genre_ids")
     val genreIds: List<Int>,
     @Json(name = "original_title")

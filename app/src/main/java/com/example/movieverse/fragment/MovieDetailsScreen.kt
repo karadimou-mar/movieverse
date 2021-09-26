@@ -63,7 +63,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
                 binding.overview.text = it.overview
                 binding.movieImage.loadImage(
                     "${Constants.POSTER_BASE_URL}${args.selectedMoviePoster}",
-                    R.drawable.ic_default_black
+                    R.drawable.ic_launcher_foreground
                 )
                 binding.title.text = args.selectedMovieTitle
             }
