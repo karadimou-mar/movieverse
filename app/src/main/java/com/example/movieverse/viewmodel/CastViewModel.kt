@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.cast.CastDetailsResponse
+import com.example.movieverse.model.cast.PersonMoviesResponse
 import com.example.movieverse.model.movie.CreditsResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.SearchRepository
@@ -17,6 +19,7 @@ class CastViewModel(
 ) : ViewModel() {
 
     // TODO: abstract progressbar logic
+    //TODO: renaming cast => person ?
     val showProgressBar: LiveData<Boolean>
         get() = _showProgressBar
     private val _showProgressBar = MutableLiveData<Boolean>()
@@ -28,6 +31,10 @@ class CastViewModel(
     val castDetailsResult: LiveData<CastDetailsResponse>
         get() = _castDetailsResult
     private val _castDetailsResult = MutableLiveData<CastDetailsResponse>()
+
+    val personMoviesResult: LiveData<PersonMoviesResponse>
+        get() = _personMoviesResult
+    private val _personMoviesResult = MutableLiveData<PersonMoviesResponse>()
 
 
     internal fun getMovieCast(movieId: Int) {
@@ -78,12 +85,38 @@ class CastViewModel(
         }
     }
 
+    internal fun getPersonMoviesById(personId: Int) {
+        viewModelScope.launch {
+            when (val person = searchRepository.getPersonMoviesById(personId)) {
+                is NetworkResponse.Success -> {
+                    Log.d(TAG, "PersonMovies: Success: ${person.body}")
+                    _personMoviesResult.value = person.body
+                }
+                is NetworkResponse.ApiError -> {
+                    Log.d(
+                        TAG,
+                        "PersonMovies: ApiError: statusCode: ${person.body.statusCode} , statusMsg: ${person.body.statusMsg}"
+                    )
+                }
+                is NetworkResponse.NetworkError -> {
+                    Log.d(TAG, "PersonMovies: NetworkError: ${person.error.message}")
+                }
+                is NetworkResponse.UnknownError -> {
+                    Log.d(TAG, "PersonMovies: UnknownError: ${person.error?.message}")
+                }
+            }
+            _showProgressBar.value = false
+        }
+    }
+
+
     companion object {
         private val TAG = CastViewModel::class.java.simpleName
     }
 }
 
 fun defaultCastViewModelFactory(context: Context) = factory {
-    val repository = SearchRepository()
+    val db = getMovieDatabase(context)
+    val repository = SearchRepository(db.movieDao)
     CastViewModel(repository)
 }

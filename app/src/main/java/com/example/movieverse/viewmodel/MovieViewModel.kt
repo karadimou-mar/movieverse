@@ -6,8 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.Genre
 import com.example.movieverse.model.movie.MovieDetailsResponse
+import com.example.movieverse.model.movie.MovieResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.SearchRepository
 import kotlinx.coroutines.launch
@@ -34,6 +36,11 @@ class MovieViewModel(
         get() = _imdbIdResult
     private val _imdbIdResult =
         MutableLiveData<String>()
+
+    val moviesInDb: LiveData<List<MovieResponse>>
+        get() = _moviesInDb
+    private val _moviesInDb =
+        MutableLiveData<List<MovieResponse>>()
 
     val isDetailsShown: LiveData<Boolean>
         get() = _isDetailsShown
@@ -119,6 +126,24 @@ class MovieViewModel(
         _imdbIdResult.value = ""
     }
 
+    fun storeMovie(movie: MovieResponse) {
+        viewModelScope.launch {
+            searchRepository.storeMovie(movie)
+        }
+    }
+
+    fun getMoviesList() {
+        viewModelScope.launch {
+            try {
+                val movies = searchRepository.getMoviesList().toMutableList()
+                _moviesInDb.value = movies
+            } catch (error: Throwable) {
+                Log.e(TAG, "getMoviesList: Cannot get movies from db", error)
+                _moviesInDb.value = mutableListOf()
+            }
+        }
+    }
+
     internal fun isBackFromDetails(bool: Boolean) {
         _isBackFromDetails.value = bool
     }
@@ -129,6 +154,7 @@ class MovieViewModel(
 }
 
 fun defaultMovieViewModelFactory(context: Context) = factory {
-    val repository = SearchRepository()
+    val db = getMovieDatabase(context)
+    val repository = SearchRepository(db.movieDao)
     MovieViewModel(repository)
 }

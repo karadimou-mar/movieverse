@@ -3,13 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.FavoritesScreen">
 
     <TextView
+        android:id="@+id/favTv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Favorite"
         android:textColor="@color/white"
-        android:textSize="20sp" />
+        android:textSize="30sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

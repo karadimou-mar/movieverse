@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.movie.MovieResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.SearchRepository
@@ -89,6 +90,7 @@ class SearchViewModel(
 }
 
 fun defaultSearchViewModelFactory(context: Context) = factory {
-    val repository = SearchRepository()
+    val db = getMovieDatabase(context)
+    val repository = SearchRepository(db.movieDao)
     SearchViewModel(repository)
 }

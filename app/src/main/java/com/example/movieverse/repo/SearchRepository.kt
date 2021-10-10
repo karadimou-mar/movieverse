@@ -1,12 +1,11 @@
 package com.example.movieverse.repo
 
+import com.example.movieverse.db.MovieDao
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
 import com.example.movieverse.model.cast.CastDetailsResponse
 import com.example.movieverse.model.cast.PersonMoviesResponse
-import com.example.movieverse.model.movie.CreditsResponse
-import com.example.movieverse.model.movie.MovieDetailsResponse
-import com.example.movieverse.model.movie.MovieImdbIdResponse
+import com.example.movieverse.model.movie.*
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.net.search.getMovieService
@@ -14,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 // TODO: split repositories
-class SearchRepository() {
+class SearchRepository(private val movieDao: MovieDao) {
 
     suspend fun searchMovie(query: String): NetworkResponse<SearchResponse, ErrorResponse> =
         withContext(Dispatchers.IO) {
@@ -62,5 +61,18 @@ class SearchRepository() {
         withContext(Dispatchers.IO) {
             val movieService = getMovieService()
             movieService.getPersonMoviesById(personId)
+        }
+
+    //room db
+    suspend fun storeMovie(movieResponse: MovieResponse): Long =
+        withContext(Dispatchers.IO) {
+            movieDao.insertMovie(movieResponse.toMovieInDb())
+        }
+
+    suspend fun getMoviesList(): List<MovieResponse> =
+        withContext(Dispatchers.IO) {
+            movieDao.getMoviesList().map {
+                it.toMovieResponse()
+            }
         }
 }

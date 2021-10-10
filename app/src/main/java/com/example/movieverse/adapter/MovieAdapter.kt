@@ -11,7 +11,8 @@ import com.example.movieverse.model.movie.MovieResponse
 
 class MovieAdapter(
     private val onMovieListener: OnClickListener,
-    private val onShareListener: OnShareListener
+    private val onShareListener: OnShareListener,
+    private val onStoreListener: OnStoreInDbListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -35,7 +36,8 @@ class MovieAdapter(
                 false
             ),
             onMovieListener,
-            onShareListener
+            onShareListener,
+            onStoreListener
         )
     }
 
@@ -53,15 +55,8 @@ class MovieAdapter(
         differ.submitList(list)
     }
 
-    fun getSelectedMovie(position: Int): MovieResponse {
-        if (differ.currentList.isNotEmpty()) {
-            return differ.currentList[position]
-        }
-        return MovieResponse(
-            -1, "", false,
-            "", "", emptyList(), "", "",
-            "", "", 0.0, -1, false, 0.0
-        )
+    fun getSelectedMovie(position: Int): MovieResponse? {
+        return differ.currentList[position]
     }
 
     class OnClickListener(
@@ -79,5 +74,13 @@ class MovieAdapter(
         fun onShareBtnClick(
             movieId: Int?
         ) = movieId?.let { shareListener(it) }
+    }
+
+    class OnStoreInDbListener(
+        val storeListener: (MovieResponse) -> Unit
+    ) {
+        fun onStoreClick(
+            movie: MovieResponse
+        ) = storeListener(movie)
     }
 }

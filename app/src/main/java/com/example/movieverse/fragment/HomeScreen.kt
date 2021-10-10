@@ -24,7 +24,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
-import java.util.*
 
 @ExperimentalCoroutinesApi
 @FlowPreview
@@ -134,9 +133,9 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
     }
 
     private fun initAdapters() {
-        searchAdapter = MovieAdapter(searchItemListener, shareListener)
+        searchAdapter = MovieAdapter(searchItemListener, shareListener, storeListener)
         binding.moviesList.initRecyclerView(customAdapter = searchAdapter)
-        upcomingAdapter = MovieAdapter(upcomingItemListener, shareListener)
+        upcomingAdapter = MovieAdapter(upcomingItemListener, shareListener, storeListener)
         binding.upcomingList.initRecyclerView(customAdapter = upcomingAdapter)
 
     }
@@ -182,6 +181,10 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
 
     private val shareListener = MovieAdapter.OnShareListener { movieId ->
         movieViewModel.getImdbId(movieId)
+    }
+
+    private val storeListener = MovieAdapter.OnStoreInDbListener { movie ->
+        movieViewModel.storeMovie(movie)
     }
 
     override fun onDestroy() {
