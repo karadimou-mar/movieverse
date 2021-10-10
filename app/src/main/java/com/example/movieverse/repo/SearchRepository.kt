@@ -3,8 +3,10 @@ package com.example.movieverse.repo
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
 import com.example.movieverse.model.cast.CastDetailsResponse
+import com.example.movieverse.model.cast.PersonMoviesResponse
 import com.example.movieverse.model.movie.CreditsResponse
 import com.example.movieverse.model.movie.MovieDetailsResponse
+import com.example.movieverse.model.movie.MovieImdbIdResponse
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.net.search.getMovieService
@@ -38,6 +40,12 @@ class SearchRepository() {
             movieService.getMovieDetailsById(movieId)
         }
 
+    suspend fun getImdbId(movieId: Int): NetworkResponse<MovieImdbIdResponse, ErrorResponse> =
+        withContext(Dispatchers.IO) {
+            val movieService = getMovieService()
+            movieService.getImdbId(movieId)
+        }
+
     suspend fun getMovieCast(movieId: Int): NetworkResponse<CreditsResponse, ErrorResponse> =
         withContext(Dispatchers.IO) {
             val movieService = getMovieService()
@@ -48,5 +56,11 @@ class SearchRepository() {
         withContext(Dispatchers.IO) {
             val movieService = getMovieService()
             movieService.getCastDetailsById(personId)
+        }
+
+    suspend fun getPersonMoviesById(personId: Int): NetworkResponse<PersonMoviesResponse, ErrorResponse> =
+        withContext(Dispatchers.IO) {
+            val movieService = getMovieService()
+            movieService.getPersonMoviesById(personId)
         }
 }

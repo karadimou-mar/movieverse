@@ -1,5 +1,6 @@
 package com.example.movieverse.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @FlowPreview
@@ -58,6 +60,7 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
         initAdapters()
         subscribeObservers()
         getUpcomingMovies()
+        movieViewModel.clearImdbId()
 
         binding.searchSection.searchIcon.setOnClickListener {
             searchMovie()
@@ -92,6 +95,19 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
             (activity as NavigationActivity).showProgressBar(it)
         })
 
+        movieViewModel.imdbIdResult.observe(viewLifecycleOwner, { imdbId ->
+            if (imdbId.isNotEmpty()) {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, "https://www.imdb.com/title/$imdbId/")
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+            }
+        })
+
         // TODO: observe for genre
     }
 
@@ -118,9 +134,9 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
     }
 
     private fun initAdapters() {
-        searchAdapter = MovieAdapter(searchItemListener)
+        searchAdapter = MovieAdapter(searchItemListener, shareListener)
         binding.moviesList.initRecyclerView(customAdapter = searchAdapter)
-        upcomingAdapter = MovieAdapter(upcomingItemListener)
+        upcomingAdapter = MovieAdapter(upcomingItemListener, shareListener)
         binding.upcomingList.initRecyclerView(customAdapter = upcomingAdapter)
 
     }
@@ -162,6 +178,10 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
             poster to imagePoster
         )
         direction?.let { findNavController().navigate(it, extras) }
+    }
+
+    private val shareListener = MovieAdapter.OnShareListener { movieId ->
+        movieViewModel.getImdbId(movieId)
     }
 
     override fun onDestroy() {

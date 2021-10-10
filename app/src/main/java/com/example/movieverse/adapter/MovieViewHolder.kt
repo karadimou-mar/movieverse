@@ -1,20 +1,25 @@
 package com.example.movieverse.adapter
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieverse.R
 import com.example.movieverse.databinding.MovieItemBinding
 import com.example.movieverse.model.movie.MovieResponse
 import com.example.movieverse.util.Constants.POSTER_BASE_URL
+import com.example.movieverse.util.changeTouchableAreaOfView
 import com.example.movieverse.util.loadImage
 
 class MovieViewHolder(
     private val binding: MovieItemBinding,
     private val onMovieListener: MovieAdapter.OnClickListener,
+    private val onShareListener: MovieAdapter.OnShareListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(movie: MovieResponse) {
         // TODO image
         // TODO remove MovieResponse and add Movie data class
+        binding.parentView.changeTouchableAreaOfView(binding.shareImg, 20)
         binding.title.text = movie.title
         binding.year.text = binding.year.context.getString(R.string.yearOfRelease, movie.releaseDate?.substringBefore('-'))
         binding.ratingBar.rating = (movie.voteAverage / 2).toFloat()
@@ -28,6 +33,11 @@ class MovieViewHolder(
         binding.movieImage.transitionName = movie.id.toString()
         itemView.setOnClickListener {
             onMovieListener.onMovieClick(adapterPosition, binding.movieImage)
+        }
+        
+        binding.shareImg.setOnClickListener {
+            onShareListener.onShareBtnClick(movie.id)
+            Log.d(TAG, "bind: $movie.id")
         }
     }
 }

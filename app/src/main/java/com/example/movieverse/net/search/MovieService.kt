@@ -3,8 +3,10 @@ package com.example.movieverse.net.search
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
 import com.example.movieverse.model.cast.CastDetailsResponse
+import com.example.movieverse.model.cast.PersonMoviesResponse
 import com.example.movieverse.model.movie.CreditsResponse
 import com.example.movieverse.model.movie.MovieDetailsResponse
+import com.example.movieverse.model.movie.MovieImdbIdResponse
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.net.createRetrofitService
@@ -53,6 +55,12 @@ interface MovieService {
         @Query("api_key") apiKey: String = API_KEY,
     ): NetworkResponse<MovieDetailsResponse, ErrorResponse>
 
+    @GET("3//movie/{movie_id}/external_ids")
+    suspend fun getImdbId(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY,
+    ): NetworkResponse<MovieImdbIdResponse, ErrorResponse>
+
     //TODO: append_to_response?
     @GET("3//movie/{movie_id}/credits")
     suspend fun getMovieCast(
@@ -65,4 +73,10 @@ interface MovieService {
         @Path("person_id") personId: Int,
         @Query("api_key") apiKey: String = API_KEY,
     ): NetworkResponse<CastDetailsResponse, ErrorResponse>
+
+    @GET("3//person/{person_id}/movie_credits")
+    suspend fun getPersonMoviesById(
+        @Path("person_id") personId: Int,
+        @Query("api_key") apiKey: String = API_KEY,
+    ): NetworkResponse<PersonMoviesResponse, ErrorResponse>
 }

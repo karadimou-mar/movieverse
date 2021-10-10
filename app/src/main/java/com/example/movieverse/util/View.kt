@@ -1,6 +1,8 @@
 package com.example.movieverse.util
 
 import android.content.Context
+import android.graphics.Rect
+import android.view.TouchDelegate
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
@@ -100,5 +102,18 @@ fun RecyclerView.initHorizontalRecyclerView(
     layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     customAdapter?.let {
         adapter = it
+    }
+}
+
+fun View.changeTouchableAreaOfView(clickableArea: View, extraSpace: Int) {
+    //val parent = view?. as View
+    this.post {
+        val touchableArea = Rect()
+        clickableArea.getHitRect(touchableArea)
+        touchableArea.top -= extraSpace
+        touchableArea.bottom += extraSpace
+        touchableArea.left -= extraSpace
+        touchableArea.right += extraSpace
+        this.touchDelegate = TouchDelegate(touchableArea, clickableArea)
     }
 }

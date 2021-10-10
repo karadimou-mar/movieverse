@@ -10,7 +10,8 @@ import com.example.movieverse.databinding.MovieItemBinding
 import com.example.movieverse.model.movie.MovieResponse
 
 class MovieAdapter(
-    private val onMovieListener: OnClickListener
+    private val onMovieListener: OnClickListener,
+    private val onShareListener: OnShareListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -33,7 +34,8 @@ class MovieAdapter(
                 parent,
                 false
             ),
-            onMovieListener
+            onMovieListener,
+            onShareListener
         )
     }
 
@@ -62,10 +64,20 @@ class MovieAdapter(
         )
     }
 
-    class OnClickListener(val clickListener: (Int, ImageView) -> Unit) {
+    class OnClickListener(
+        val clickListener: (Int, ImageView) -> Unit
+    ) {
         fun onMovieClick(
             position: Int,
             poster: ImageView
         ) = clickListener(position, poster)
+    }
+
+    class OnShareListener(
+        val shareListener: (Int) -> Unit
+    ) {
+        fun onShareBtnClick(
+            movieId: Int?
+        ) = movieId?.let { shareListener(it) }
     }
 }

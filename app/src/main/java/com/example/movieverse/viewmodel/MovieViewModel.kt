@@ -30,6 +30,11 @@ class MovieViewModel(
     private val _movieDetailsResult =
         MutableLiveData<MovieDetailsResponse>()
 
+    val imdbIdResult: LiveData<String>
+        get() = _imdbIdResult
+    private val _imdbIdResult =
+        MutableLiveData<String>()
+
     val isDetailsShown: LiveData<Boolean>
         get() = _isDetailsShown
     private val _isDetailsShown = MutableLiveData<Boolean>(false)
@@ -38,7 +43,7 @@ class MovieViewModel(
         get() = _isBackFromDetails
     private val _isBackFromDetails = MutableLiveData(false)
 
-    internal fun getMoviesGenres() {
+    fun getMoviesGenres() {
         viewModelScope.launch {
             when (val response = searchRepository.getMoviesGenres()) {
                 is NetworkResponse.Success -> {
@@ -62,7 +67,7 @@ class MovieViewModel(
         }
     }
 
-    internal fun getMovieDetailsById(movieId: Int) {
+    fun getMovieDetailsById(movieId: Int) {
         viewModelScope.launch {
             when (val details = searchRepository.getMovieDetailsById(movieId)) {
                 is NetworkResponse.Success -> {
@@ -84,6 +89,34 @@ class MovieViewModel(
             }
             _showProgressBar.value = false
         }
+    }
+
+    fun getImdbId(movieId: Int) {
+        viewModelScope.launch {
+            when (val details = searchRepository.getImdbId(movieId)) {
+                is NetworkResponse.Success -> {
+                    _imdbIdResult.value = details.body.imdbID
+                    Log.d(TAG, "Imdb: Success: ${details.body.imdbID}")
+                }
+                is NetworkResponse.ApiError -> {
+                    Log.d(
+                        TAG,
+                        "Imdb: ApiError: statusCode: ${details.body.statusCode} , statusMsg: ${details.body.statusMsg}"
+                    )
+                }
+                is NetworkResponse.NetworkError -> {
+                    Log.d(TAG, "Imdb: NetworkError: ${details.error.message}")
+                }
+                is NetworkResponse.UnknownError -> {
+                    Log.d(TAG, "Imdb: UnknownError: ${details.error?.message}")
+                }
+            }
+            //_showProgressBar.value = false
+        }
+    }
+
+    fun clearImdbId() {
+        _imdbIdResult.value = ""
     }
 
     internal fun isBackFromDetails(bool: Boolean) {
