@@ -49,7 +49,6 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
         sharedElementReturnTransition =
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
 
-        //getUpcomingMovies()
         return binding.root
     }
 
@@ -106,7 +105,6 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
                 startActivity(shareIntent)
             }
         })
-
         // TODO: observe for genre
     }
 

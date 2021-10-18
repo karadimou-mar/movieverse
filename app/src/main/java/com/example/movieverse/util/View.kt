@@ -8,9 +8,16 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 fun View.animHideDown() {
     if (this.visibility == View.VISIBLE) {
@@ -94,6 +101,52 @@ fun RecyclerView.initRecyclerView(
     }
 }
 
+fun RecyclerView.initRecyclerViewWithCallback(
+    @DrawableRes drawableRes: Int? = null,
+    customAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?,
+    swipeCallBack: (Int) -> Unit
+) {
+    drawableRes?.let {
+        addDivider(it)
+    }
+    layoutManager = LinearLayoutManager(context)
+    addSwipeLogic(swipeCallBack)
+    customAdapter?.let {
+        adapter = it
+    }
+}
+
+private fun RecyclerView.addDivider(@DrawableRes drawableRes: Int) {
+    val divider = object : DividerItemDecoration(context, LinearLayoutManager.VERTICAL) {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            val position = parent.getChildAdapterPosition(view)
+            if (position == state.itemCount -1) {
+                outRect.setEmpty()
+            } else {
+                super.getItemOffsets(outRect, view, parent, state)
+            }
+        }
+    }
+    val drawable = ContextCompat.getDrawable(context, drawableRes)
+    drawable?.let {
+            divider.setDrawable(it)
+            addItemDecoration(divider)
+    }
+}
+
+private fun RecyclerView.addSwipeLogic(swipeCallback: (Int) -> Unit) {
+    val swipeHandler = object : SwipeToDeleteCallback(context) {
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            swipeCallback(viewHolder.adapterPosition)
+        }
+    }
+    ItemTouchHelper(swipeHandler).attachToRecyclerView(this)
+}
 fun RecyclerView.initHorizontalRecyclerView(
     @DrawableRes drawableRes: Int? = null,
     customAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?
@@ -117,3 +170,10 @@ fun View.changeTouchableAreaOfView(clickableArea: View, extraSpace: Int) {
         this.touchDelegate = TouchDelegate(touchableArea, clickableArea)
     }
 }
+
+fun View.showSnackbar(@StringRes messageRes: Int, param: String, length: Int = Snackbar.LENGTH_LONG, f: Snackbar.() -> Unit) {
+    val snackBar = Snackbar.make(this, resources.getString(messageRes, param), length)
+    snackBar.f()
+    snackBar.show()
+}
+

@@ -1,6 +1,7 @@
 package com.example.movieverse.repo
 
 import com.example.movieverse.db.MovieDao
+import com.example.movieverse.db.MovieInDB
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
 import com.example.movieverse.model.cast.CastDetailsResponse
@@ -69,10 +70,22 @@ class SearchRepository(private val movieDao: MovieDao) {
             movieDao.insertMovie(movieResponse.toMovieInDb())
         }
 
-    suspend fun getMoviesList(): List<MovieResponse> =
+    suspend fun getMoviesFromDb(): List<MovieInDB> =
         withContext(Dispatchers.IO) {
             movieDao.getMoviesList().map {
-                it.toMovieResponse()
+                it
             }
+        }
+
+    suspend fun getMoviesIdFromDb(): List<Int> =
+        withContext(Dispatchers.IO) {
+            movieDao.getMoviesId().map {
+                it
+            }
+        }
+
+    suspend fun deleteMovie(movieInDB: MovieInDB) =
+        withContext(Dispatchers.IO) {
+            movieDao.removeMovie(movieInDB.id)
         }
 }

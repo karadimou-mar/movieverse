@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movieverse.db.MovieInDB
 import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.Genre
 import com.example.movieverse.model.movie.MovieDetailsResponse
@@ -37,18 +38,14 @@ class MovieViewModel(
     private val _imdbIdResult =
         MutableLiveData<String>()
 
-    val moviesInDb: LiveData<List<MovieResponse>>
+    val moviesInDb: LiveData<MutableList<MovieInDB>>
         get() = _moviesInDb
     private val _moviesInDb =
-        MutableLiveData<List<MovieResponse>>()
+        MutableLiveData<MutableList<MovieInDB>>()
 
-    val isDetailsShown: LiveData<Boolean>
-        get() = _isDetailsShown
-    private val _isDetailsShown = MutableLiveData<Boolean>(false)
-
-    val isBackFromDetails: LiveData<Boolean>
-        get() = _isBackFromDetails
-    private val _isBackFromDetails = MutableLiveData(false)
+    val movieRemoved: LiveData<MovieInDB>
+        get() = _movieRemoved
+    private val _movieRemoved = MutableLiveData<MovieInDB>()
 
     fun getMoviesGenres() {
         viewModelScope.launch {
@@ -118,7 +115,6 @@ class MovieViewModel(
                     Log.d(TAG, "Imdb: UnknownError: ${details.error?.message}")
                 }
             }
-            //_showProgressBar.value = false
         }
     }
 
@@ -132,20 +128,38 @@ class MovieViewModel(
         }
     }
 
-    fun getMoviesList() {
+    fun getMoviesFromDb(): List<MovieInDB>? {
+        _movieRemoved.value = null
         viewModelScope.launch {
             try {
-                val movies = searchRepository.getMoviesList().toMutableList()
-                _moviesInDb.value = movies
+                val movies = searchRepository.getMoviesFromDb()
+                _moviesInDb.value = movies.toMutableList()
             } catch (error: Throwable) {
                 Log.e(TAG, "getMoviesList: Cannot get movies from db", error)
                 _moviesInDb.value = mutableListOf()
             }
         }
+        return _moviesInDb.value
     }
 
-    internal fun isBackFromDetails(bool: Boolean) {
-        _isBackFromDetails.value = bool
+    fun deleteMovieAtPosition(position: Int) {
+        viewModelScope.launch {
+            try {
+                val movies = moviesInDb.value
+                movies?.forEachIndexed { index, movieInDB ->
+                    if (index == position) {
+                        searchRepository.deleteMovie(movieInDB)
+                        _moviesInDb.value?.removeAt(index)
+                        _movieRemoved.value = movieInDB
+                    }
+                }
+                _moviesInDb.value = movies?.toMutableList()
+
+            } catch (error: Throwable) {
+                _movieRemoved.value = null
+                Log.e(TAG, "getMoviesList: Cannot delete movie from db", error)
+            }
+        }
     }
 
     companion object {

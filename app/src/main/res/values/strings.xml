@@ -12,6 +12,13 @@
     <string name="cd_favorites">Favorites</string>
     <string name="cd_theatres">Theatres</string>
     <string name="cd_account">Account</string>
+
     <!--Cast member!-->
-    <string name="cast_character" translatable="false">as  %s</string>
+    <string name="cast_character">as  %s</string>
+
+    <!--Person details-->
+    <string name="person_birth_place">at %s</string>
+
+    <!-- Favorites screen-->
+    <string name="fav_movie_deleted">%s removed!</string>
 </resources>
