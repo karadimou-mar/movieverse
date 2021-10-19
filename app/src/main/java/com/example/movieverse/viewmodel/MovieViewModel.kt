@@ -11,6 +11,7 @@ import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.Genre
 import com.example.movieverse.model.movie.MovieDetailsResponse
 import com.example.movieverse.model.movie.MovieResponse
+import com.example.movieverse.model.movie.MovieVideoResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.SearchRepository
 import kotlinx.coroutines.launch
@@ -37,6 +38,11 @@ class MovieViewModel(
         get() = _imdbIdResult
     private val _imdbIdResult =
         MutableLiveData<String>()
+
+    val movieVideosResult: LiveData<MovieVideoResponse>
+        get() = _movieVideosResult
+    private val _movieVideosResult =
+        MutableLiveData<MovieVideoResponse>()
 
     val moviesInDb: LiveData<MutableList<MovieInDB>>
         get() = _moviesInDb
@@ -120,6 +126,29 @@ class MovieViewModel(
 
     fun clearImdbId() {
         _imdbIdResult.value = ""
+    }
+
+    fun getMovieVideo(movieId: Int) {
+        viewModelScope.launch {
+            when (val videos = searchRepository.getMovieVideo(movieId)) {
+                is NetworkResponse.Success -> {
+                    _movieVideosResult.value = videos.body
+                    Log.d(TAG, "MovieVideo: Success: ${videos.body}")
+                }
+                is NetworkResponse.ApiError -> {
+                    Log.d(
+                        TAG,
+                        "MovieVideo: ApiError: statusCode: ${videos.body.statusCode} , statusMsg: ${videos.body.statusMsg}"
+                    )
+                }
+                is NetworkResponse.NetworkError -> {
+                    Log.d(TAG, "MovieVideo: NetworkError: ${videos.error.message}")
+                }
+                is NetworkResponse.UnknownError -> {
+                    Log.d(TAG, "MovieVideo: UnknownError: ${videos.error?.message}")
+                }
+            }
+        }
     }
 
     fun storeMovie(movie: MovieResponse) {

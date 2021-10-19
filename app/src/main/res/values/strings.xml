@@ -14,7 +14,7 @@
     <string name="cd_account">Account</string>
 
     <!--Cast member!-->
-    <string name="cast_character">as  %s</string>
+    <string name="cast_character">%s</string>
 
     <!--Person details-->
     <string name="person_birth_place">at %s</string>

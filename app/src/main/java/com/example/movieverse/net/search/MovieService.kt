@@ -7,6 +7,7 @@ import com.example.movieverse.model.cast.PersonMoviesResponse
 import com.example.movieverse.model.movie.CreditsResponse
 import com.example.movieverse.model.movie.MovieDetailsResponse
 import com.example.movieverse.model.movie.MovieImdbIdResponse
+import com.example.movieverse.model.movie.MovieVideoResponse
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.net.createRetrofitService
@@ -79,4 +80,10 @@ interface MovieService {
         @Path("person_id") personId: Int,
         @Query("api_key") apiKey: String = API_KEY,
     ): NetworkResponse<PersonMoviesResponse, ErrorResponse>
+
+    @GET("3//movie/{movie_id}/videos")
+    suspend fun getMovieVideo(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): NetworkResponse<MovieVideoResponse, ErrorResponse>
 }

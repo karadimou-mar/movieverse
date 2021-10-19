@@ -64,6 +64,12 @@ class SearchRepository(private val movieDao: MovieDao) {
             movieService.getPersonMoviesById(personId)
         }
 
+    suspend fun getMovieVideo(movieId: Int): NetworkResponse<MovieVideoResponse, ErrorResponse> =
+        withContext(Dispatchers.IO) {
+            val movieService = getMovieService()
+            movieService.getMovieVideo(movieId)
+        }
+
     //room db
     suspend fun storeMovie(movieResponse: MovieResponse): Long =
         withContext(Dispatchers.IO) {
@@ -73,13 +79,6 @@ class SearchRepository(private val movieDao: MovieDao) {
     suspend fun getMoviesFromDb(): List<MovieInDB> =
         withContext(Dispatchers.IO) {
             movieDao.getMoviesList().map {
-                it
-            }
-        }
-
-    suspend fun getMoviesIdFromDb(): List<Int> =
-        withContext(Dispatchers.IO) {
-            movieDao.getMoviesId().map {
                 it
             }
         }

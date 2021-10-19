@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
@@ -15,6 +17,8 @@ import com.example.movieverse.adapter.CastAdapter
 import com.example.movieverse.databinding.MovieDetailsScreenBinding
 import com.example.movieverse.util.*
 import com.example.movieverse.viewmodel.*
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import java.util.concurrent.TimeUnit
 
 class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
@@ -35,6 +39,9 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         savedInstanceState: Bundle?
     ): View {
         _binding = MovieDetailsScreenBinding.inflate(inflater, container, false)
+
+        lifecycle.addObserver(binding.ytPlayer)
+
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(android.R.transition.move)
         postponeEnterTransition(250, TimeUnit.MILLISECONDS)
@@ -48,7 +55,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         subscribeObservers()
         getMovieDetailsById(args.selectedMovieId)
         getMovieCast(args.selectedMovieId)
-        //setupBackButton()
+        getMovieVideo(args.selectedMovieId)
 
         // for shared element transition
         binding.movieImage.transitionName = args.selectedMoviePoster
@@ -78,6 +85,16 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
             }
         })
 
+        movieViewModel.movieVideosResult.observe(viewLifecycleOwner, {
+            if (it.results?.isNotEmpty() == true) {
+                it.results[0].key?.let { key ->
+                    loadYouTube(key)
+                }
+            } else {
+                binding.ytPlayer.visibility = View.GONE
+            }
+        })
+
         movieViewModel.showProgressBar.observe(viewLifecycleOwner, {
             (activity as NavigationActivity).showProgressBar(it)
         })
@@ -88,20 +105,21 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         binding.castList.initHorizontalRecyclerView(customAdapter = castAdapter)
     }
 
-    private val castDetailsItemListener = CastAdapter.OnClickListener { position ->
+    private val castDetailsItemListener = CastAdapter.OnClickListener { position, image ->
         val personId = castAdapter?.getSelectedPerson(position)?.personId
+        val personImage = castAdapter?.getSelectedPerson(position)?.profilePath.valueOrEmpty()
 
-        val directions: NavDirections? =
+        val direction: NavDirections? =
             personId?.let {
                 MovieDetailsScreenDirections.actionMovieDetailsScreenToCastDetailsScreen(
-                    selectedPersonId = it
+                    selectedPersonId = it,
+                    selectedPersonImage = personImage
                 )
             }
-        directions.let {
-            if (it != null) {
-                findNavController().navigate(it)
-            }
-        }
+        val extras = FragmentNavigatorExtras(
+             image to personImage
+        )
+        direction?.let { findNavController().navigate(it, extras) }
     }
 
     private fun getMovieDetailsById(movieId: Int) {
@@ -112,6 +130,18 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
     private fun getMovieCast(movieId: Int) {
         (activity as NavigationActivity).showProgressBar(true)
         castViewModel.getMovieCast(movieId)
+    }
+
+    private fun getMovieVideo(movieId: Int) {
+        movieViewModel.getMovieVideo(movieId)
+    }
+
+    private fun loadYouTube(id: String) {
+        binding.ytPlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                youTubePlayer.loadVideo(id, 0f);
+            }
+        })
     }
 
     override fun onDestroy() {
