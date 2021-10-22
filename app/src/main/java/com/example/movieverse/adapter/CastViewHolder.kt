@@ -14,16 +14,16 @@ class CastViewHolder(
 
     fun bind(cast: CastResponse) {
         // TODO remove MovieDetailsResponse and add Movie data class
-        // TODO find a way to remove context from here
         binding.memberImage.loadImage(
             "${POSTER_BASE_URL}${cast.profilePath}",
-            R.drawable.ic_default_black
+            R.drawable.ic_launcher_foreground
         )
         binding.memberName.text = cast.name
         binding.character.text = binding.character.context?.getString(R.string.cast_character, cast.character)
 
+        binding.memberImage.transitionName = cast.personId.toString()
         itemView.setOnClickListener {
-            onCastListener.onMovieClick(adapterPosition)
+            onCastListener.onMovieClick(adapterPosition, binding.memberImage)
         }
     }
 }

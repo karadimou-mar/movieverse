@@ -41,12 +41,16 @@
     </fragment>
     <fragment
         android:id="@+id/castDetails"
-        android:name="com.example.movieverse.fragment.CastDetailsScreen"
+        android:name="com.example.movieverse.fragment.PersonDetailsScreen"
         android:label="@string/title_cast_details"
-        tools:layout="@layout/cast_details_screen" >
+        tools:layout="@layout/person_details_screen" >
     <argument
         android:name="selectedPersonId"
         android:defaultValue="-1"
         app:argType="integer" />
+        <argument
+            android:name="selectedPersonImage"
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
 </navigation>

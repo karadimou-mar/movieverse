@@ -2,6 +2,7 @@ package com.example.movieverse.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -60,9 +61,10 @@ class CastAdapter(
         )
     }
 
-    class OnClickListener(val clickListener: (Int) -> Unit) {
+    class OnClickListener(val clickListener: (Int, ImageView) -> Unit) {
         fun onMovieClick(
-            position: Int
-        ) = clickListener(position)
+            position: Int,
+            personImage: ImageView
+        ) = clickListener(position, personImage)
     }
 }

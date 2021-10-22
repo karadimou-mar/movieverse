@@ -14,6 +14,8 @@ class CastDetailsResponse(
     val name: String,
     @Json(name = "also_known_as")
     val knownAs: List<String>,
+    @Json(name = "place_of_birth")
+    val placeOfBirth: String,
     val gender: Int,
     val biography: String,
     @Json(name = "profile_path")
