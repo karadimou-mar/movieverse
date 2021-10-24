@@ -21,8 +21,8 @@ data class MovieInDB(
     val overview: String,
     val voteAverage: Double,
     //@ColumnInfo(name = "release_date")
-    val releaseDate: String,
-//    @ColumnInfo(name = "genre_ids")
+    val releaseDate: String?
+    //    @ColumnInfo(name = "genre_ids")
 //    val genreIds: ArrayList<Int>
     //val genres: List<GenresPair>
 )

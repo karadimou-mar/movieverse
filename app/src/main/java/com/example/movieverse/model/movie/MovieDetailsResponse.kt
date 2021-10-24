@@ -7,7 +7,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MovieDetailsResponse(
     val id: Int,
-    val overview: String
+    val overview: String,
+    val runtime: Int
 ) : Parcelable
 
 @Parcelize

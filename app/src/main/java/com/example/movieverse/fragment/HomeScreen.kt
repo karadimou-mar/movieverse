@@ -142,13 +142,17 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
         val movieId = searchAdapter?.getSelectedMovie(position)?.id
         val imagePoster = searchAdapter?.getSelectedMovie(position)?.posterPath.valueOrEmpty()
         val title = searchAdapter?.getSelectedMovie(position)?.title
+        val releaseDate = upcomingAdapter?.getSelectedMovie(position)?.releaseDate.valueOrEmpty()
+        val rating = upcomingAdapter?.getSelectedMovie(position)?.voteAverage?.div(2).valueOrEmpty()
 
         val direction: NavDirections? =
             movieId?.let {
                 HomeScreenDirections.actionHomeScreenToMovieDetails(
                     selectedMovieId = it,
                     selectedMoviePoster = imagePoster,
-                    selectedMovieTitle = title!!
+                    selectedMovieTitle = title!!,
+                    selectedReleaseDate = releaseDate,
+                    selectedRating = rating
                 )
             }
         val extras = FragmentNavigatorExtras(
@@ -161,13 +165,17 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
         val movieId = upcomingAdapter?.getSelectedMovie(position)?.id
         val imagePoster = upcomingAdapter?.getSelectedMovie(position)?.posterPath.valueOrEmpty()
         val title = upcomingAdapter?.getSelectedMovie(position)?.title.valueOrEmpty()
+        val releaseDate = upcomingAdapter?.getSelectedMovie(position)?.releaseDate.valueOrEmpty()
+        val rating = upcomingAdapter?.getSelectedMovie(position)?.voteAverage?.div(2).valueOrEmpty()
 
         val direction: NavDirections? =
             movieId?.let {
                 HomeScreenDirections.actionHomeScreenToMovieDetails(
                     selectedMovieId = it,
                     selectedMoviePoster = imagePoster,
-                    selectedMovieTitle = title
+                    selectedMovieTitle = title,
+                    selectedReleaseDate = releaseDate,
+                    selectedRating = rating
                 )
             }
 

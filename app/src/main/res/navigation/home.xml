@@ -35,6 +35,14 @@
             android:name="selectedMovieTitle"
             android:defaultValue=""
             app:argType="string" />
+        <argument
+            android:name="selectedReleaseDate"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="selectedRating"
+            android:defaultValue=""
+            app:argType="string" />
         <action
             android:id="@+id/action_MovieDetailsScreen_to_HomeScreen"
             app:destination="@+id/home" />
@@ -43,11 +51,11 @@
         android:id="@+id/castDetails"
         android:name="com.example.movieverse.fragment.PersonDetailsScreen"
         android:label="@string/title_cast_details"
-        tools:layout="@layout/person_details_screen" >
-    <argument
-        android:name="selectedPersonId"
-        android:defaultValue="-1"
-        app:argType="integer" />
+        tools:layout="@layout/person_details_screen">
+        <argument
+            android:name="selectedPersonId"
+            android:defaultValue="-1"
+            app:argType="integer" />
         <argument
             android:name="selectedPersonImage"
             android:defaultValue=""

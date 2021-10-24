@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -65,7 +64,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         movieViewModel.movieDetailsResult.observe(viewLifecycleOwner, {
             // TODO: check for when it == null
             if (it != null) {
-                binding.view.visibility = View.VISIBLE
+                binding.topView.visibility = View.VISIBLE
                 binding.overview.visibility = View.VISIBLE
                 binding.overview.text = it.overview
                 binding.movieImage.loadImage(
@@ -73,13 +72,16 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
                     R.drawable.ic_launcher_foreground
                 )
                 binding.title.text = args.selectedMovieTitle
+                binding.year.text = context?.getString(R.string.yearOfRelease, args.selectedReleaseDate.substringBefore('-'))
+                binding.ratingBar.rating = args.selectedRating.toFloat()
+                binding.runtime.text = it.runtime.toHoursMinutes()
             }
         })
 
         castViewModel.castResult.observe(viewLifecycleOwner, {
             // TODO: check for when it == null
             if (!it.cast.isNullOrEmpty()) {
-                binding.view.visibility = View.VISIBLE
+                binding.topView.visibility = View.VISIBLE
                 binding.castLabel.visibility = View.VISIBLE
                 castAdapter?.submit(it.cast)
             }
@@ -87,10 +89,12 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
 
         movieViewModel.movieVideosResult.observe(viewLifecycleOwner, {
             if (it.results?.isNotEmpty() == true) {
+                binding.ytPlayer.visibility = View.VISIBLE
                 it.results[0].key?.let { key ->
                     loadYouTube(key)
                 }
             } else {
+                binding.topView.visibility = View.GONE
                 binding.ytPlayer.visibility = View.GONE
             }
         })
@@ -139,13 +143,14 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
     private fun loadYouTube(id: String) {
         binding.ytPlayer.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
-                youTubePlayer.loadVideo(id, 0f);
+                youTubePlayer.cueVideo(id, 0f)
             }
         })
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        binding.ytPlayer.release()
         _binding = null
     }
 

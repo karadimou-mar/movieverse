@@ -36,7 +36,7 @@ fun MovieResponse.toMovieInDb() = MovieInDB(
     posterPath,
     overview,
     voteAverage,
-    releaseDate!!
+    releaseDate
 )
 
 fun MovieInDB.toMovieResponse() = MovieResponse(
