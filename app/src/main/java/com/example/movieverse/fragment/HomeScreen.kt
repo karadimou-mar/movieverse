@@ -1,6 +1,5 @@
 package com.example.movieverse.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -58,11 +57,10 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
         initAdapters()
         subscribeObservers()
         getUpcomingMovies()
-        movieViewModel.clearImdbId()
+        movieViewModel.clearVideoId()
 
         binding.searchSection.searchIcon.setOnClickListener {
             searchMovie()
-            //getMoviesGenres()
             it.hideKeyboard(context)
         }
         //search also while typing
@@ -92,19 +90,6 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
         searchViewModel.showProgressBar.observe(viewLifecycleOwner, {
             (activity as NavigationActivity).showProgressBar(it)
         })
-
-        movieViewModel.imdbIdResult.observe(viewLifecycleOwner, { imdbId ->
-            if (imdbId.isNotEmpty()) {
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, "https://www.imdb.com/title/$imdbId/")
-                    type = "text/plain"
-                }
-
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
-            }
-        })
         // TODO: observe for genre
     }
 
@@ -131,9 +116,9 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
     }
 
     private fun initAdapters() {
-        searchAdapter = MovieAdapter(searchItemListener, shareListener, storeListener)
+        searchAdapter = MovieAdapter(searchItemListener, storeListener)
         binding.moviesList.initRecyclerView(customAdapter = searchAdapter)
-        upcomingAdapter = MovieAdapter(upcomingItemListener, shareListener, storeListener)
+        upcomingAdapter = MovieAdapter(upcomingItemListener, storeListener)
         binding.upcomingList.initRecyclerView(customAdapter = upcomingAdapter)
 
     }
@@ -141,16 +126,16 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
     private val searchItemListener = MovieAdapter.OnClickListener { position, poster ->
         val movieId = searchAdapter?.getSelectedMovie(position)?.id
         val imagePoster = searchAdapter?.getSelectedMovie(position)?.posterPath.valueOrEmpty()
-        val title = searchAdapter?.getSelectedMovie(position)?.title
-        val releaseDate = upcomingAdapter?.getSelectedMovie(position)?.releaseDate.valueOrEmpty()
-        val rating = upcomingAdapter?.getSelectedMovie(position)?.voteAverage?.div(2).valueOrEmpty()
+        val title = searchAdapter?.getSelectedMovie(position)?.title.valueOrDashes()
+        val releaseDate = searchAdapter?.getSelectedMovie(position)?.releaseDate.valueOrEmpty()
+        val rating = searchAdapter?.getSelectedMovie(position)?.voteAverage?.div(2).valueOrEmpty()
 
         val direction: NavDirections? =
             movieId?.let {
                 HomeScreenDirections.actionHomeScreenToMovieDetails(
                     selectedMovieId = it,
                     selectedMoviePoster = imagePoster,
-                    selectedMovieTitle = title!!,
+                    selectedMovieTitle = title,
                     selectedReleaseDate = releaseDate,
                     selectedRating = rating
                 )
@@ -183,10 +168,6 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
             poster to imagePoster
         )
         direction?.let { findNavController().navigate(it, extras) }
-    }
-
-    private val shareListener = MovieAdapter.OnShareListener { movieId ->
-        movieViewModel.getImdbId(movieId)
     }
 
     private val storeListener = MovieAdapter.OnStoreInDbListener { movie ->

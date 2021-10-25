@@ -8,8 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.cast.CastDetailsResponse
-import com.example.movieverse.model.cast.PersonMoviesResponse
-import com.example.movieverse.model.movie.CreditsResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.SearchRepository
 import kotlinx.coroutines.launch
@@ -19,47 +17,13 @@ class CastViewModel(
 ) : ViewModel() {
 
     // TODO: abstract progressbar logic
-    //TODO: renaming cast => person ?
     val showProgressBar: LiveData<Boolean>
         get() = _showProgressBar
     private val _showProgressBar = MutableLiveData<Boolean>()
 
-    val castResult: LiveData<CreditsResponse>
-        get() = _castResult
-    private val _castResult = MutableLiveData<CreditsResponse>()
-
     val castDetailsResult: LiveData<CastDetailsResponse>
         get() = _castDetailsResult
     private val _castDetailsResult = MutableLiveData<CastDetailsResponse>()
-
-    val personMoviesResult: LiveData<PersonMoviesResponse>
-        get() = _personMoviesResult
-    private val _personMoviesResult = MutableLiveData<PersonMoviesResponse>()
-
-
-    internal fun getMovieCast(movieId: Int) {
-        viewModelScope.launch {
-            when (val cast = searchRepository.getMovieCast(movieId)) {
-                is NetworkResponse.Success -> {
-                    Log.d(TAG, "MovieDetails: Success: ${cast.body}")
-                    _castResult.value = cast.body
-                }
-                is NetworkResponse.ApiError -> {
-                    Log.d(
-                        TAG,
-                        "Cast: ApiError: statusCode: ${cast.body.statusCode} , statusMsg: ${cast.body.statusMsg}"
-                    )
-                }
-                is NetworkResponse.NetworkError -> {
-                    Log.d(TAG, "Cast: NetworkError: ${cast.error.message}")
-                }
-                is NetworkResponse.UnknownError -> {
-                    Log.d(TAG, "Cast: UnknownError: ${cast.error?.message}")
-                }
-            }
-            _showProgressBar.value = false
-        }
-    }
 
     internal fun getCastDetailsById(personId: Int) {
         viewModelScope.launch {
@@ -84,31 +48,6 @@ class CastViewModel(
             _showProgressBar.value = false
         }
     }
-
-    internal fun getPersonMoviesById(personId: Int) {
-        viewModelScope.launch {
-            when (val person = searchRepository.getPersonMoviesById(personId)) {
-                is NetworkResponse.Success -> {
-                    Log.d(TAG, "PersonMovies: Success: ${person.body}")
-                    _personMoviesResult.value = person.body
-                }
-                is NetworkResponse.ApiError -> {
-                    Log.d(
-                        TAG,
-                        "PersonMovies: ApiError: statusCode: ${person.body.statusCode} , statusMsg: ${person.body.statusMsg}"
-                    )
-                }
-                is NetworkResponse.NetworkError -> {
-                    Log.d(TAG, "PersonMovies: NetworkError: ${person.error.message}")
-                }
-                is NetworkResponse.UnknownError -> {
-                    Log.d(TAG, "PersonMovies: UnknownError: ${person.error?.message}")
-                }
-            }
-            _showProgressBar.value = false
-        }
-    }
-
 
     companion object {
         private val TAG = CastViewModel::class.java.simpleName

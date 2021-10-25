@@ -28,7 +28,7 @@ data class MovieResponse(
     val hasVideo: Boolean,
     @Json(name = "vote_average")
     val voteAverage: Double
-): Parcelable
+) : Parcelable
 
 fun MovieResponse.toMovieInDb() = MovieInDB(
     id!!,
@@ -36,7 +36,10 @@ fun MovieResponse.toMovieInDb() = MovieInDB(
     posterPath,
     overview,
     voteAverage,
-    releaseDate
+    releaseDate,
+    hasVideo
+// TODO: save videos in db??
+
 )
 
 fun MovieInDB.toMovieResponse() = MovieResponse(
@@ -46,7 +49,7 @@ fun MovieInDB.toMovieResponse() = MovieResponse(
     overview = overview,
     voteAverage = voteAverage,
     releaseDate = releaseDate,
-    hasVideo = false
+    hasVideo = hasVideos
 )
 
 

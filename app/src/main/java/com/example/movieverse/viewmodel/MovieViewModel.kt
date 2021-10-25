@@ -9,9 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.movieverse.db.MovieInDB
 import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.Genre
-import com.example.movieverse.model.movie.MovieDetailsResponse
-import com.example.movieverse.model.movie.MovieResponse
-import com.example.movieverse.model.movie.MovieVideoResponse
+import com.example.movieverse.model.cast.CastResponse
+import com.example.movieverse.model.movie.*
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.SearchRepository
 import kotlinx.coroutines.launch
@@ -34,6 +33,11 @@ class MovieViewModel(
     private val _movieDetailsResult =
         MutableLiveData<MovieDetailsResponse>()
 
+    val movieId: LiveData<String>
+        get() = _movieId
+    private val _movieId =
+        MutableLiveData<String>()
+
     val imdbIdResult: LiveData<String>
         get() = _imdbIdResult
     private val _imdbIdResult =
@@ -52,6 +56,10 @@ class MovieViewModel(
     val movieRemoved: LiveData<MovieInDB>
         get() = _movieRemoved
     private val _movieRemoved = MutableLiveData<MovieInDB>()
+
+    val castResult: LiveData<List<CastResponse>>
+        get() = _castResult
+    private val _castResult = MutableLiveData<List<CastResponse>>()
 
     fun getMoviesGenres() {
         viewModelScope.launch {
@@ -83,6 +91,18 @@ class MovieViewModel(
                 is NetworkResponse.Success -> {
                     _movieDetailsResult.value = details.body
                     Log.d(TAG, "MovieDetails: Success: ${details.body}")
+                    // youtube video
+                    if (_movieDetailsResult.value!!.videos?.results?.isNotEmpty() == true
+                        && _movieDetailsResult.value!!.videos?.results?.get(0)?.official == true
+                    ) {
+                        _movieId.value = _movieDetailsResult.value!!.videos?.results?.get(0)?.key
+                    } else {
+                        _movieId.value = ""
+                    }
+
+                    _imdbIdResult.value = details.body.externalIds?.imdbID
+                    _castResult.value = details.body.credits?.cast
+
                 }
                 is NetworkResponse.ApiError -> {
                     Log.d(
@@ -101,54 +121,12 @@ class MovieViewModel(
         }
     }
 
-    fun getImdbId(movieId: Int) {
-        viewModelScope.launch {
-            when (val details = searchRepository.getImdbId(movieId)) {
-                is NetworkResponse.Success -> {
-                    _imdbIdResult.value = details.body.imdbID
-                    Log.d(TAG, "Imdb: Success: ${details.body.imdbID}")
-                }
-                is NetworkResponse.ApiError -> {
-                    Log.d(
-                        TAG,
-                        "Imdb: ApiError: statusCode: ${details.body.statusCode} , statusMsg: ${details.body.statusMsg}"
-                    )
-                }
-                is NetworkResponse.NetworkError -> {
-                    Log.d(TAG, "Imdb: NetworkError: ${details.error.message}")
-                }
-                is NetworkResponse.UnknownError -> {
-                    Log.d(TAG, "Imdb: UnknownError: ${details.error?.message}")
-                }
-            }
-        }
-    }
-
     fun clearImdbId() {
         _imdbIdResult.value = ""
     }
 
-    fun getMovieVideo(movieId: Int) {
-        viewModelScope.launch {
-            when (val videos = searchRepository.getMovieVideo(movieId)) {
-                is NetworkResponse.Success -> {
-                    _movieVideosResult.value = videos.body
-                    Log.d(TAG, "MovieVideo: Success: ${videos.body}")
-                }
-                is NetworkResponse.ApiError -> {
-                    Log.d(
-                        TAG,
-                        "MovieVideo: ApiError: statusCode: ${videos.body.statusCode} , statusMsg: ${videos.body.statusMsg}"
-                    )
-                }
-                is NetworkResponse.NetworkError -> {
-                    Log.d(TAG, "MovieVideo: NetworkError: ${videos.error.message}")
-                }
-                is NetworkResponse.UnknownError -> {
-                    Log.d(TAG, "MovieVideo: UnknownError: ${videos.error?.message}")
-                }
-            }
-        }
+    fun clearVideoId() {
+        _movieId.value = ""
     }
 
     fun storeMovie(movie: MovieResponse) {

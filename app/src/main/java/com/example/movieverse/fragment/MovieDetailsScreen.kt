@@ -1,5 +1,6 @@
 package com.example.movieverse.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,8 +54,8 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         initAdapters()
         subscribeObservers()
         getMovieDetailsById(args.selectedMovieId)
-        getMovieCast(args.selectedMovieId)
-        getMovieVideo(args.selectedMovieId)
+        movieViewModel.clearImdbId()
+        movieViewModel.clearVideoId()
 
         // for shared element transition
         binding.movieImage.transitionName = args.selectedMoviePoster
@@ -64,8 +65,8 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         movieViewModel.movieDetailsResult.observe(viewLifecycleOwner, {
             // TODO: check for when it == null
             if (it != null) {
+                binding.parentLyt.visibility = View.VISIBLE
                 binding.topView.visibility = View.VISIBLE
-                binding.overview.visibility = View.VISIBLE
                 binding.overview.text = it.overview
                 binding.movieImage.loadImage(
                     "${Constants.POSTER_BASE_URL}${args.selectedMoviePoster}",
@@ -78,24 +79,35 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
             }
         })
 
-        castViewModel.castResult.observe(viewLifecycleOwner, {
-            // TODO: check for when it == null
-            if (!it.cast.isNullOrEmpty()) {
-                binding.topView.visibility = View.VISIBLE
-                binding.castLabel.visibility = View.VISIBLE
-                castAdapter?.submit(it.cast)
+        movieViewModel.movieId.observe(viewLifecycleOwner, {
+            if (it.isNotEmpty()) {
+                binding.ytPlayer.visibility = View.VISIBLE
+                loadYouTube(it)
+            }else {
+                binding.topView.visibility = View.GONE
+                binding.ytPlayer.visibility = View.GONE
             }
         })
 
-        movieViewModel.movieVideosResult.observe(viewLifecycleOwner, {
-            if (it.results?.isNotEmpty() == true) {
-                binding.ytPlayer.visibility = View.VISIBLE
-                it.results[0].key?.let { key ->
-                    loadYouTube(key)
+        movieViewModel.castResult.observe(viewLifecycleOwner, {
+            if (!it.isNullOrEmpty()) {
+                binding.castLabel.visibility = View.VISIBLE
+                castAdapter?.submit(it)
+            }
+        })
+
+        movieViewModel.imdbIdResult.observe(viewLifecycleOwner, { imdbId ->
+            binding.shareImg.setOnClickListener {
+                if (imdbId.isNotEmpty()) {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, "https://www.imdb.com/title/$imdbId/")
+                        type = "text/plain"
+                    }
+
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
                 }
-            } else {
-                binding.topView.visibility = View.GONE
-                binding.ytPlayer.visibility = View.GONE
             }
         })
 
@@ -129,15 +141,6 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
     private fun getMovieDetailsById(movieId: Int) {
         (activity as NavigationActivity).showProgressBar(true)
         movieViewModel.getMovieDetailsById(movieId)
-    }
-
-    private fun getMovieCast(movieId: Int) {
-        (activity as NavigationActivity).showProgressBar(true)
-        castViewModel.getMovieCast(movieId)
-    }
-
-    private fun getMovieVideo(movieId: Int) {
-        movieViewModel.getMovieVideo(movieId)
     }
 
     private fun loadYouTube(id: String) {

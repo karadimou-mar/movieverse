@@ -11,7 +11,6 @@ import com.example.movieverse.model.movie.MovieResponse
 
 class MovieAdapter(
     private val onMovieListener: OnClickListener,
-    private val onShareListener: OnShareListener,
     private val onStoreListener: OnStoreInDbListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -36,7 +35,6 @@ class MovieAdapter(
                 false
             ),
             onMovieListener,
-            onShareListener,
             onStoreListener
         )
     }

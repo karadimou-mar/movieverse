@@ -43,7 +43,6 @@ class PersonDetailsScreen : Fragment(), CastViewModelUser {
 
         subscribeObservers()
         getCastDetailsById(args.selectedPersonId)
-        getPersonMoviesById(args.selectedPersonId)
 
         // for shared element transition
         binding.personImage.transitionName = args.selectedPersonImage
@@ -74,11 +73,6 @@ class PersonDetailsScreen : Fragment(), CastViewModelUser {
     private fun getCastDetailsById(personId: Int) {
         (activity as NavigationActivity).showProgressBar(true)
         castViewModel.getCastDetailsById(personId)
-    }
-
-    private fun getPersonMoviesById(personId: Int) {
-        (activity as NavigationActivity).showProgressBar(true)
-        castViewModel.getPersonMoviesById(personId)
     }
 
     override fun onDestroy() {

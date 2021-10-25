@@ -16,12 +16,12 @@ data class MovieInDB(
     @PrimaryKey
     val id: Int,
     val title: String,
-    //@ColumnInfo(name = "poster_path")
     val posterPath: String?,
     val overview: String,
     val voteAverage: Double,
-    //@ColumnInfo(name = "release_date")
-    val releaseDate: String?
+    val releaseDate: String?,
+    // TODO: store videos list in db??
+    val hasVideos: Boolean
     //    @ColumnInfo(name = "genre_ids")
 //    val genreIds: ArrayList<Int>
     //val genres: List<GenresPair>
@@ -33,6 +33,19 @@ data class GenreInDB(
     val id: Int,
     //@ColumnInfo(name = "name")
     val name: String
+)
+
+@Entity(tableName = "videos")
+data class VideosInDB(
+    @PrimaryKey
+    val id: String,
+    val name: String,
+    val key: String?,
+    val site: String,
+    val size: Int,
+    val type: String,
+    val official: Boolean,
+    val publishedAt: String
 )
 
 @Dao

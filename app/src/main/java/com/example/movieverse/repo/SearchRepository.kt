@@ -5,7 +5,6 @@ import com.example.movieverse.db.MovieInDB
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
 import com.example.movieverse.model.cast.CastDetailsResponse
-import com.example.movieverse.model.cast.PersonMoviesResponse
 import com.example.movieverse.model.movie.*
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
@@ -40,34 +39,10 @@ class SearchRepository(private val movieDao: MovieDao) {
             movieService.getMovieDetailsById(movieId)
         }
 
-    suspend fun getImdbId(movieId: Int): NetworkResponse<MovieImdbIdResponse, ErrorResponse> =
-        withContext(Dispatchers.IO) {
-            val movieService = getMovieService()
-            movieService.getImdbId(movieId)
-        }
-
-    suspend fun getMovieCast(movieId: Int): NetworkResponse<CreditsResponse, ErrorResponse> =
-        withContext(Dispatchers.IO) {
-            val movieService = getMovieService()
-            movieService.getMovieCast(movieId)
-        }
-
     suspend fun getCastDetailsById(personId: Int): NetworkResponse<CastDetailsResponse, ErrorResponse> =
         withContext(Dispatchers.IO) {
             val movieService = getMovieService()
             movieService.getCastDetailsById(personId)
-        }
-
-    suspend fun getPersonMoviesById(personId: Int): NetworkResponse<PersonMoviesResponse, ErrorResponse> =
-        withContext(Dispatchers.IO) {
-            val movieService = getMovieService()
-            movieService.getPersonMoviesById(personId)
-        }
-
-    suspend fun getMovieVideo(movieId: Int): NetworkResponse<MovieVideoResponse, ErrorResponse> =
-        withContext(Dispatchers.IO) {
-            val movieService = getMovieService()
-            movieService.getMovieVideo(movieId)
         }
 
     //room db

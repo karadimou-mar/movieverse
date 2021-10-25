@@ -1,6 +1,7 @@
 package com.example.movieverse.model.movie
 
 import android.os.Parcelable
+import com.example.movieverse.model.cast.CreditsResponse
 import com.squareup.moshi.Json
 import kotlinx.parcelize.Parcelize
 
@@ -8,25 +9,9 @@ import kotlinx.parcelize.Parcelize
 data class MovieDetailsResponse(
     val id: Int,
     val overview: String,
-    val runtime: Int
-) : Parcelable
-
-@Parcelize
-data class CreditsResponse(
-    val id: Int,
-    val cast: List<CastResponse>
-) : Parcelable
-
-@Parcelize
-data class CastResponse(
-    @Json(name = "cast_id")
-    val castId: Int?,
-    @Json(name = "id")
-    val personId: Int?,
-    @Json(name = "known_for_department")
-    val department: String,
-    val name: String,
-    @Json(name = "profile_path")
-    val profilePath: String?,
-    val character: String
+    val runtime: Int,
+    val videos: MovieVideoResponse?,
+    @Json(name = "external_ids")
+    val externalIds: MovieImdbIdResponse?,
+    val credits: CreditsResponse?
 ) : Parcelable

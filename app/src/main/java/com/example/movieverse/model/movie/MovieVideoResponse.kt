@@ -6,9 +6,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MovieVideoResponse(
-    val id: Int,
     val results: List<VideoResults>?
-): Parcelable
+) : Parcelable
 
 @Parcelize
 data class VideoResults(
@@ -21,4 +20,4 @@ data class VideoResults(
     @Json(name = "published_at")
     val publishedAt: String,
     val id: String
-): Parcelable
+) : Parcelable

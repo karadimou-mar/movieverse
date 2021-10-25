@@ -3,11 +3,7 @@ package com.example.movieverse.net.search
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
 import com.example.movieverse.model.cast.CastDetailsResponse
-import com.example.movieverse.model.cast.PersonMoviesResponse
-import com.example.movieverse.model.movie.CreditsResponse
 import com.example.movieverse.model.movie.MovieDetailsResponse
-import com.example.movieverse.model.movie.MovieImdbIdResponse
-import com.example.movieverse.model.movie.MovieVideoResponse
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.net.createRetrofitService
@@ -29,9 +25,6 @@ fun getMovieService(): MovieService =
 
 interface MovieService {
 
-    //TODO: find a better way for APIKEY
-    //TODO: based on region??
-
     @GET("3/search/movie")
     suspend fun searchMovie(
         @Query("api_key") apiKey: String = API_KEY,
@@ -50,40 +43,17 @@ interface MovieService {
         @Query("api_key") apiKey: String = API_KEY,
     ): NetworkResponse<GenreResponse, ErrorResponse>
 
-    @GET("3//movie/{movie_id}")
+    @GET("3/movie/{movie_id}")
     suspend fun getMovieDetailsById(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = API_KEY,
+        @Query("append_to_response") append: String = "videos,external_ids,credits"
     ): NetworkResponse<MovieDetailsResponse, ErrorResponse>
 
-    @GET("3//movie/{movie_id}/external_ids")
-    suspend fun getImdbId(
-        @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String = API_KEY,
-    ): NetworkResponse<MovieImdbIdResponse, ErrorResponse>
-
-    //TODO: append_to_response?
-    @GET("3//movie/{movie_id}/credits")
-    suspend fun getMovieCast(
-        @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String = API_KEY,
-    ): NetworkResponse<CreditsResponse, ErrorResponse>
-
-    @GET("3//person/{person_id}")
+    @GET("3/person/{person_id}")
     suspend fun getCastDetailsById(
         @Path("person_id") personId: Int,
         @Query("api_key") apiKey: String = API_KEY,
+        @Query("append_to_response") append: String = "movie_credits"
     ): NetworkResponse<CastDetailsResponse, ErrorResponse>
-
-    @GET("3//person/{person_id}/movie_credits")
-    suspend fun getPersonMoviesById(
-        @Path("person_id") personId: Int,
-        @Query("api_key") apiKey: String = API_KEY,
-    ): NetworkResponse<PersonMoviesResponse, ErrorResponse>
-
-    @GET("3//movie/{movie_id}/videos")
-    suspend fun getMovieVideo(
-        @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String = API_KEY
-    ): NetworkResponse<MovieVideoResponse, ErrorResponse>
 }
