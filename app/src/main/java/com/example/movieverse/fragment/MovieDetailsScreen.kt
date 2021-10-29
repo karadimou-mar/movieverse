@@ -14,6 +14,7 @@ import androidx.transition.TransitionInflater
 import com.example.movieverse.NavigationActivity
 import com.example.movieverse.R
 import com.example.movieverse.adapter.CastAdapter
+import com.example.movieverse.adapter.RecomAdapter
 import com.example.movieverse.databinding.MovieDetailsScreenBinding
 import com.example.movieverse.util.*
 import com.example.movieverse.viewmodel.*
@@ -31,6 +32,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
     override val movieViewModel: MovieViewModel by activityMovieViewModel()
     override val castViewModel: CastViewModel by activityCastViewModel()
     private var castAdapter: CastAdapter? = null
+    private var recomAdapter: RecomAdapter? = null
 
 
     override fun onCreateView(
@@ -96,6 +98,13 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
             }
         })
 
+        movieViewModel.recomResult.observe(viewLifecycleOwner, {
+            if (!it.isNullOrEmpty()) {
+               binding.recommendationsLabel.visibility = View.VISIBLE
+               recomAdapter?.submit(it)
+            }
+        })
+
         movieViewModel.imdbIdResult.observe(viewLifecycleOwner, { imdbId ->
             binding.shareImg.setOnClickListener {
                 if (imdbId.isNotEmpty()) {
@@ -119,6 +128,8 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
     private fun initAdapters() {
         castAdapter = CastAdapter(castDetailsItemListener)
         binding.castList.initHorizontalRecyclerView(customAdapter = castAdapter)
+        recomAdapter = RecomAdapter(recomItemListener)
+        binding.recommendationsList.initHorizontalRecyclerView(customAdapter = recomAdapter)
     }
 
     private val castDetailsItemListener = CastAdapter.OnClickListener { position, image ->
@@ -134,6 +145,29 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
             }
         val extras = FragmentNavigatorExtras(
              image to personImage
+        )
+        direction?.let { findNavController().navigate(it, extras) }
+    }
+
+    private val recomItemListener = RecomAdapter.OnClickListener { position, image ->
+        val movieId = recomAdapter?.getSelectedMovie(position)?.id
+        val imagePoster = recomAdapter?.getSelectedMovie(position)?.posterPath.valueOrEmpty()
+        val title = recomAdapter?.getSelectedMovie(position)?.title.valueOrDashes()
+        val releaseDate = recomAdapter?.getSelectedMovie(position)?.releaseDate.valueOrEmpty()
+        val rating = recomAdapter?.getSelectedMovie(position)?.voteAverage?.div(2).valueOrEmpty()
+
+        val direction: NavDirections? =
+            movieId?.let {
+                MovieDetailsScreenDirections.actionMovieDetailsScreenToMovieDetailsScreen(
+                    selectedMovieId = it,
+                    selectedMoviePoster = imagePoster,
+                    selectedMovieTitle = title,
+                    selectedReleaseDate = releaseDate,
+                    selectedRating = rating
+                )
+            }
+        val extras = FragmentNavigatorExtras(
+            image to imagePoster
         )
         direction?.let { findNavController().navigate(it, extras) }
     }

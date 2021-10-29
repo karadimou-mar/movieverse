@@ -23,6 +23,10 @@
         <action
             android:id="@+id/action_MovieDetailsScreen_to_CastDetailsScreen"
             app:destination="@+id/castDetails" />
+        <action
+            android:id="@+id/action_MovieDetailsScreen_to_MovieDetailsScreen"
+            app:destination="@id/movieDetails"
+            />
         <argument
             android:name="selectedMovieId"
             android:defaultValue="-1"

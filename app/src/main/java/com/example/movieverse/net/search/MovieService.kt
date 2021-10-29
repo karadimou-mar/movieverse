@@ -47,7 +47,7 @@ interface MovieService {
     suspend fun getMovieDetailsById(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = API_KEY,
-        @Query("append_to_response") append: String = "videos,external_ids,credits"
+        @Query("append_to_response") append: String = "videos,external_ids,credits,recommendations"
     ): NetworkResponse<MovieDetailsResponse, ErrorResponse>
 
     @GET("3/person/{person_id}")

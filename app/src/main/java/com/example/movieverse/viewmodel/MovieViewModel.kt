@@ -61,6 +61,10 @@ class MovieViewModel(
         get() = _castResult
     private val _castResult = MutableLiveData<List<CastResponse>>()
 
+    val recomResult: LiveData<List<MovieResponse>>
+        get() = _recomResult
+    private val _recomResult = MutableLiveData<List<MovieResponse>>()
+
     fun getMoviesGenres() {
         viewModelScope.launch {
             when (val response = searchRepository.getMoviesGenres()) {
@@ -102,6 +106,7 @@ class MovieViewModel(
 
                     _imdbIdResult.value = details.body.externalIds?.imdbID
                     _castResult.value = details.body.credits?.cast
+                    _recomResult.value = details.body.recommendations?.results
 
                 }
                 is NetworkResponse.ApiError -> {

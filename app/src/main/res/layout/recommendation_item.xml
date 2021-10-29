@@ -8,42 +8,55 @@
     android:paddingStart="20dp"
     android:paddingEnd="20dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/memberImage"
+    <ImageView
+        android:id="@+id/recImage"
         android:layout_width="100dp"
         android:layout_height="130dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="@drawable/ic_launcher_background" />
 
-    <TextView
-        android:id="@+id/memberName"
-        android:layout_width="100dp"
+    <ImageView
+        android:id="@+id/starImage"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_star"
+        app:layout_constraintEnd_toStartOf="@id/recRating"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recImage" />
+
+    <TextView
+        android:id="@+id/recRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:maxLines="2"
-        android:padding="5dp"
         android:textColor="@color/white"
-        android:textSize="15sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/memberImage"
-        tools:text="Daniel Radcliffe" />
+        app:layout_constraintStart_toEndOf="@id/starImage"
+        app:layout_constraintTop_toBottomOf="@id/recImage"
+        tools:text="8.6" />
 
     <TextView
-        android:id="@+id/character"
+        android:id="@+id/recTitle"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
-        android:maxLines="2"
         android:textColor="@color/white"
-        android:textSize="12sp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/memberName"
-        tools:text="Harry Potter" />
+        app:layout_constraintTop_toBottomOf="@id/starImage"
+        tools:text="Harry Potter and the chamber of secrets" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

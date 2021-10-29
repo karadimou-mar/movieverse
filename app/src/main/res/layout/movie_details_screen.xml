@@ -139,7 +139,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:fontFamily="sans-serif-medium"
-            android:text="The Cast"
+            android:text="Top cast"
             android:textColor="@color/red"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@id/castList"
@@ -188,6 +188,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/overviewLabel"
             tools:text="In her turbulent life as a professional assassin, Scarlet was cruelly forced to abandon her daughter Sam and go on the run." />
+
+        <TextView
+            android:id="@+id/recommendationsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="More like this"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/overview"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recommendationsList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recommendationsLabel"
+            tools:itemCount="5"
+            tools:listitem="@layout/recommendation_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
