@@ -13,7 +13,6 @@ class CastViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(cast: CastResponse) {
-        // TODO remove MovieDetailsResponse and add Movie data class
         binding.memberImage.loadImage(
             "${POSTER_BASE_URL}${cast.profilePath}",
             R.drawable.ic_launcher_foreground

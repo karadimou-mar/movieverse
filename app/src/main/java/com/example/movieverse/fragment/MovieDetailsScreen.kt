@@ -98,6 +98,18 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
             }
         })
 
+        movieViewModel.crewResult.observe(viewLifecycleOwner, {
+            if (!it.isNullOrEmpty()) {
+                binding.director.visibility = View.VISIBLE
+                binding.writer.visibility = View.VISIBLE
+                binding.director.text = getString(R.string.director, it.toDirectors())
+                binding.writer.text = getString(R.string.writer, it.toWriters())
+            } else {
+                binding.director.visibility = View.GONE
+                binding.writer.visibility = View.GONE
+            }
+        })
+
         movieViewModel.recomResult.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                binding.recommendationsLabel.visibility = View.VISIBLE

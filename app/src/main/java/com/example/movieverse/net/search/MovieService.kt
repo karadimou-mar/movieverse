@@ -25,32 +25,32 @@ fun getMovieService(): MovieService =
 
 interface MovieService {
 
-    @GET("3/search/movie")
+    @GET("search/movie")
     suspend fun searchMovie(
         @Query("api_key") apiKey: String = API_KEY,
         @Query("query") query: String,
         @Query("page") page: Int = 1
     ): NetworkResponse<SearchResponse, ErrorResponse>
 
-    @GET("3/movie/upcoming")
+    @GET("movie/upcoming")
     suspend fun getUpcomingMovies(
         @Query("api_key") apiKey: String = API_KEY,
         @Query("page") page: Int = 1
     ): NetworkResponse<SearchResponse, ErrorResponse>
 
-    @GET("3/genre/movie/list")
+    @GET("genre/movie/list")
     suspend fun getMoviesGenres(
         @Query("api_key") apiKey: String = API_KEY,
     ): NetworkResponse<GenreResponse, ErrorResponse>
 
-    @GET("3/movie/{movie_id}")
+    @GET("movie/{movie_id}")
     suspend fun getMovieDetailsById(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = API_KEY,
         @Query("append_to_response") append: String = "videos,external_ids,credits,recommendations"
     ): NetworkResponse<MovieDetailsResponse, ErrorResponse>
 
-    @GET("3/person/{person_id}")
+    @GET("person/{person_id}")
     suspend fun getCastDetailsById(
         @Path("person_id") personId: Int,
         @Query("api_key") apiKey: String = API_KEY,

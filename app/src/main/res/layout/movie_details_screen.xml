@@ -50,7 +50,7 @@
             android:adjustViewBounds="true"
             android:background="@drawable/ic_launcher_foreground"
             android:scaleType="centerInside"
-            app:layout_constraintBottom_toTopOf="@id/castLabel"
+            app:layout_constraintBottom_toTopOf="@id/director"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topView"
             tools:src="@drawable/ic_launcher_foreground" />
@@ -132,6 +132,40 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/director"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/writer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/movieImage"
+            tools:text="Directed by Chris Colombus"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/writer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/castLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/director"
+            tools:text="Written by Chris Colombus"
+            tools:visibility="visible" />
+
+        <TextView
             android:id="@+id/castLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -144,7 +178,7 @@
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@id/castList"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/movieImage" />
+            app:layout_constraintTop_toBottomOf="@id/writer" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/castList"

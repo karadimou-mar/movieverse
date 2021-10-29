@@ -10,6 +10,7 @@ import com.example.movieverse.db.MovieInDB
 import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.Genre
 import com.example.movieverse.model.cast.CastResponse
+import com.example.movieverse.model.cast.CrewResponse
 import com.example.movieverse.model.movie.*
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.SearchRepository
@@ -61,6 +62,10 @@ class MovieViewModel(
         get() = _castResult
     private val _castResult = MutableLiveData<List<CastResponse>>()
 
+    val crewResult: LiveData<List<CrewResponse>>
+        get() = _crewResult
+    private val _crewResult = MutableLiveData<List<CrewResponse>>()
+
     val recomResult: LiveData<List<MovieResponse>>
         get() = _recomResult
     private val _recomResult = MutableLiveData<List<MovieResponse>>()
@@ -105,6 +110,7 @@ class MovieViewModel(
                     }
 
                     _imdbIdResult.value = details.body.externalIds?.imdbID
+                    _crewResult.value = details.body.credits?.crew
                     _castResult.value = details.body.credits?.cast
                     _recomResult.value = details.body.recommendations?.results
 
