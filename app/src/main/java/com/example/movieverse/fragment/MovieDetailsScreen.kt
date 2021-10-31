@@ -75,7 +75,10 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
                     R.drawable.ic_launcher_foreground
                 )
                 binding.title.text = args.selectedMovieTitle
-                binding.year.text = context?.getString(R.string.yearOfRelease, args.selectedReleaseDate.substringBefore('-'))
+                binding.year.text = context?.getString(
+                    R.string.yearOfRelease,
+                    args.selectedReleaseDate.substringBefore('-')
+                )
                 binding.ratingBar.rating = args.selectedRating.toFloat()
                 binding.runtime.text = it.runtime.toHoursMinutes()
             }
@@ -85,7 +88,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
             if (it.isNotEmpty()) {
                 binding.ytPlayer.visibility = View.VISIBLE
                 loadYouTube(it)
-            }else {
+            } else {
                 binding.topView.visibility = View.GONE
                 binding.ytPlayer.visibility = View.GONE
             }
@@ -94,26 +97,30 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         movieViewModel.castResult.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 binding.castLabel.visibility = View.VISIBLE
-                castAdapter?.submit(it)
+                castAdapter?.submit(it.sortByOrder())
             }
         })
 
         movieViewModel.crewResult.observe(viewLifecycleOwner, {
-            if (!it.isNullOrEmpty()) {
+            if (it.toDirectors() != "") {
                 binding.director.visibility = View.VISIBLE
-                binding.writer.visibility = View.VISIBLE
                 binding.director.text = getString(R.string.director, it.toDirectors())
-                binding.writer.text = getString(R.string.writer, it.toWriters())
             } else {
                 binding.director.visibility = View.GONE
+            }
+
+            if (it.toWriters() != "") {
+                binding.writer.visibility = View.VISIBLE
+                binding.writer.text = getString(R.string.writer, it.toDirectors())
+            } else {
                 binding.writer.visibility = View.GONE
             }
         })
 
         movieViewModel.recomResult.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
-               binding.recommendationsLabel.visibility = View.VISIBLE
-               recomAdapter?.submit(it)
+                binding.recommendationsLabel.visibility = View.VISIBLE
+                recomAdapter?.submit(it)
             }
         })
 
@@ -156,7 +163,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
                 )
             }
         val extras = FragmentNavigatorExtras(
-             image to personImage
+            image to personImage
         )
         direction?.let { findNavController().navigate(it, extras) }
     }

@@ -22,7 +22,8 @@ data class CastResponse(
     @Json(name = "profile_path")
     val profilePath: String?,
     val character: String,
-    val popularity: Double
+    val popularity: Double,
+    val order: Int
 ) : Parcelable
 
 @Parcelize

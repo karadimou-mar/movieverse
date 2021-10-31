@@ -113,7 +113,6 @@ class MovieViewModel(
                     _crewResult.value = details.body.credits?.crew
                     _castResult.value = details.body.credits?.cast
                     _recomResult.value = details.body.recommendations?.results
-
                 }
                 is NetworkResponse.ApiError -> {
                     Log.d(

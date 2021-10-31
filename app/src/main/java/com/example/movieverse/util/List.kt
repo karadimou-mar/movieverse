@@ -1,5 +1,6 @@
 package com.example.movieverse.util
 
+import com.example.movieverse.model.cast.CastResponse
 import com.example.movieverse.model.cast.CrewResponse
 
 fun List<CrewResponse>.toDirectors(): String {
@@ -13,3 +14,8 @@ fun List<CrewResponse>.toWriters(): String {
         .filter { it.job == "Writer" }
         .joinToString(separator = ", ") { directors -> directors.name }
 }
+
+fun List<CastResponse>.sortByOrder() =
+    this.sortedBy {
+        it.order
+    }
