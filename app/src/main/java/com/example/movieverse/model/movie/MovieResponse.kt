@@ -21,13 +21,14 @@ data class MovieResponse(
     val title: String,
 //    @Json(name = "backdrop_path")
 //    val backDropPath: String?,
-//    val popularity: Double,
+    val popularity: Double,
 //    @Json(name = "vote_count")
 //    val voteCount: Int,
     @Json(name = "video")
     val hasVideo: Boolean,
     @Json(name = "vote_average")
-    val voteAverage: Double
+    val voteAverage: Double,
+    val job: String?
 ) : Parcelable
 
 fun MovieResponse.toMovieInDb() = MovieInDB(
@@ -37,9 +38,10 @@ fun MovieResponse.toMovieInDb() = MovieInDB(
     overview,
     voteAverage,
     releaseDate,
-    hasVideo
+    hasVideo,
+    popularity,
+    job!!
 // TODO: save videos in db??
-
 )
 
 fun MovieInDB.toMovieResponse() = MovieResponse(
@@ -49,7 +51,9 @@ fun MovieInDB.toMovieResponse() = MovieResponse(
     overview = overview,
     voteAverage = voteAverage,
     releaseDate = releaseDate,
-    hasVideo = hasVideos
+    hasVideo = hasVideos,
+    popularity = popularity,
+    job = job
 )
 
 
