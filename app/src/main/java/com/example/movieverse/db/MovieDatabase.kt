@@ -21,7 +21,9 @@ data class MovieInDB(
     val voteAverage: Double,
     val releaseDate: String?,
     // TODO: store videos list in db??
-    val hasVideos: Boolean
+    val hasVideos: Boolean,
+    val popularity: Double,
+    val job: String
     //    @ColumnInfo(name = "genre_ids")
 //    val genreIds: ArrayList<Int>
     //val genres: List<GenresPair>

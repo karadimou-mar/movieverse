@@ -3,14 +3,14 @@ package com.example.movieverse.util
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 
-fun visibilityGone(vararg layout: ConstraintLayout) {
-    for (i in layout.indices)
-        layout[i].visibility = View.GONE
+fun visibilityGone(vararg view: View) {
+    for (i in view.indices)
+        view[i].visibility = View.GONE
 }
 
-fun visibilityNotGone(vararg layout: ConstraintLayout) {
-    for (i in layout.indices)
-        layout[i].visibility = View.VISIBLE
+fun visibilityVisible(vararg view: View) {
+    for (i in view.indices)
+        view[i].visibility = View.VISIBLE
 }
 
 fun toggleVisibilities(vararg layout: ConstraintLayout) {

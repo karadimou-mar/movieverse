@@ -10,3 +10,11 @@ fun Int?.toHoursMinutes(): String {
     val min = this?.mod(60)
     return "${hours}h ${min}min"
 }
+
+fun Int?.toGender(): String {
+    return when (this) {
+         1 -> "as actress"
+         2 -> "as actor"
+        else -> "as actor"
+    }
+}

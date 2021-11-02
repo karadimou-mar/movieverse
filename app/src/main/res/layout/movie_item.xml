@@ -45,10 +45,12 @@
         android:fontFamily="sans-serif"
         android:textColor="@color/white"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/movieImage"
         app:layout_constraintTop_toBottomOf="@id/title"
-        tools:text="(2000)" />
+        tools:text="(2000)"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/favorite"

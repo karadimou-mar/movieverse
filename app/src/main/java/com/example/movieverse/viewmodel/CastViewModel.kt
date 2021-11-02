@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.cast.CastDetailsResponse
+import com.example.movieverse.model.movie.MovieResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.SearchRepository
+import com.example.movieverse.util.toProducers
 import kotlinx.coroutines.launch
 
 class CastViewModel(
@@ -25,12 +27,28 @@ class CastViewModel(
         get() = _castDetailsResult
     private val _castDetailsResult = MutableLiveData<CastDetailsResponse>()
 
+    val movieCreditsCastResult: LiveData<List<MovieResponse>>
+        get() = _movieCreditsCastResult
+    private val _movieCreditsCastResult = MutableLiveData<List<MovieResponse>>()
+
+    val prodsResult: LiveData<List<MovieResponse>>
+        get() = _prodsResult
+    private val _prodsResult = MutableLiveData<List<MovieResponse>>()
+
+    val genderResult: LiveData<Int>
+        get() = _genderResult
+    private val _genderResult = MutableLiveData<Int>()
+
     internal fun getCastDetailsById(personId: Int) {
         viewModelScope.launch {
             when (val person = searchRepository.getCastDetailsById(personId)) {
                 is NetworkResponse.Success -> {
                     Log.d(TAG, "CastDetails: Success: ${person.body}")
                     _castDetailsResult.value = person.body
+                    _genderResult.value = person.body.gender
+                    _movieCreditsCastResult.value = person.body.movieCredits.cast
+                    _prodsResult.value = person.body.movieCredits.crew.toProducers()
+                    Log.d(TAG, "getCastDetailsById: boom: ${person.body.movieCredits.crew.toProducers()}")
                 }
                 is NetworkResponse.ApiError -> {
                     Log.d(
