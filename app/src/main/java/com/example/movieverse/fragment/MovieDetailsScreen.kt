@@ -14,7 +14,7 @@ import androidx.transition.TransitionInflater
 import com.example.movieverse.NavigationActivity
 import com.example.movieverse.R
 import com.example.movieverse.adapter.CastAdapter
-import com.example.movieverse.adapter.RecomAdapter
+import com.example.movieverse.adapter.HorizMovieAdapter
 import com.example.movieverse.databinding.MovieDetailsScreenBinding
 import com.example.movieverse.util.*
 import com.example.movieverse.viewmodel.*
@@ -32,7 +32,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
     override val movieViewModel: MovieViewModel by activityMovieViewModel()
     override val castViewModel: CastViewModel by activityCastViewModel()
     private var castAdapter: CastAdapter? = null
-    private var recomAdapter: RecomAdapter? = null
+    private var recomAdapter: HorizMovieAdapter? = null
 
 
     override fun onCreateView(
@@ -67,8 +67,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         movieViewModel.movieDetailsResult.observe(viewLifecycleOwner, {
             // TODO: check for when it == null
             if (it != null) {
-                binding.parentLyt.visibility = View.VISIBLE
-                binding.topView.visibility = View.VISIBLE
+                visibilityVisible(binding.parentLyt, binding.topView)
                 binding.overview.text = it.overview
                 binding.movieImage.loadImage(
                     "${Constants.POSTER_BASE_URL}${args.selectedMoviePoster}",
@@ -77,7 +76,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
                 binding.title.text = args.selectedMovieTitle
                 binding.year.text = context?.getString(
                     R.string.yearOfRelease,
-                    args.selectedReleaseDate.substringBefore('-')
+                    args.selectedReleaseDate.toLocalDate()?.year
                 )
                 binding.ratingBar.rating = args.selectedRating.toFloat()
                 binding.runtime.text = it.runtime.toHoursMinutes()
@@ -86,41 +85,40 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
 
         movieViewModel.movieId.observe(viewLifecycleOwner, {
             if (it.isNotEmpty()) {
-                binding.ytPlayer.visibility = View.VISIBLE
+                visibilityVisible(binding.ytPlayer)
                 loadYouTube(it)
             } else {
-                binding.topView.visibility = View.GONE
-                binding.ytPlayer.visibility = View.GONE
+                visibilityGone(binding.topView, binding.ytPlayer)
             }
         })
 
         movieViewModel.castResult.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
-                binding.castLabel.visibility = View.VISIBLE
+                visibilityVisible(binding.castLabel)
                 castAdapter?.submit(it.sortByOrder())
             }
         })
 
         movieViewModel.crewResult.observe(viewLifecycleOwner, {
             if (it.toDirectors() != "") {
-                binding.director.visibility = View.VISIBLE
+                visibilityVisible(binding.director)
                 binding.director.text = getString(R.string.director, it.toDirectors())
             } else {
-                binding.director.visibility = View.GONE
+                visibilityGone(binding.director)
             }
 
             if (it.toWriters() != "") {
-                binding.writer.visibility = View.VISIBLE
+                visibilityVisible(binding.writer)
                 binding.writer.text = getString(R.string.writer, it.toDirectors())
             } else {
-                binding.writer.visibility = View.GONE
+                visibilityGone(binding.writer)
             }
         })
 
         movieViewModel.recomResult.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
-                binding.recommendationsLabel.visibility = View.VISIBLE
-                recomAdapter?.submit(it)
+                visibilityVisible(binding.recommendationsLabel)
+                recomAdapter?.submit(it.sortByPopularity())
             }
         })
 
@@ -147,7 +145,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
     private fun initAdapters() {
         castAdapter = CastAdapter(castDetailsItemListener)
         binding.castList.initHorizontalRecyclerView(customAdapter = castAdapter)
-        recomAdapter = RecomAdapter(recomItemListener)
+        recomAdapter = HorizMovieAdapter(recomItemListener)
         binding.recommendationsList.initHorizontalRecyclerView(customAdapter = recomAdapter)
     }
 
@@ -168,7 +166,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         direction?.let { findNavController().navigate(it, extras) }
     }
 
-    private val recomItemListener = RecomAdapter.OnClickListener { position, image ->
+    private val recomItemListener = HorizMovieAdapter.OnClickListener { position, image ->
         val movieId = recomAdapter?.getSelectedMovie(position)?.id
         val imagePoster = recomAdapter?.getSelectedMovie(position)?.posterPath.valueOrEmpty()
         val title = recomAdapter?.getSelectedMovie(position)?.title.valueOrDashes()

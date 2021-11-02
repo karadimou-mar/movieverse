@@ -16,21 +16,6 @@
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp">
 
-        <TextView
-            android:id="@+id/favMoviesLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Movies"
-            android:textAllCaps="true"
-            android:textColor="@color/red"
-            android:textSize="18sp"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/favMoviesList"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favMoviesList"
             android:layout_width="match_parent"

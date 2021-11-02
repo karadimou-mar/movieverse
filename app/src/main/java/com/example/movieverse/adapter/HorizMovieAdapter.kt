@@ -6,10 +6,10 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.movieverse.databinding.RecommendationItemBinding
+import com.example.movieverse.databinding.HorizMovieItemBinding
 import com.example.movieverse.model.movie.MovieResponse
 
-class RecomAdapter(
+class HorizMovieAdapter(
     private val onMovieListener: OnClickListener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -26,8 +26,8 @@ class RecomAdapter(
     private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return RecomViewHolder(
-            RecommendationItemBinding.inflate(
+        return HorMovieViewHolder(
+            HorizMovieItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -37,7 +37,7 @@ class RecomAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is RecomViewHolder -> {
+            is HorMovieViewHolder -> {
                 holder.bind(differ.currentList[position])
             }
         }

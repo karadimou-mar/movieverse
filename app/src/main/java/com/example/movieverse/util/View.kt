@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
@@ -66,7 +67,7 @@ fun View.animShowDown() {
 fun ImageView.loadImage(url: String, errorImg: Int) {
     Glide.with(this)
         .load(url)
-        .centerCrop()
+        .fitCenter()
         .placeholder(errorImg)
         .error(errorImg)
         .fallback(errorImg)

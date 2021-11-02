@@ -10,8 +10,11 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/parentLyt"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/personImage"
@@ -31,10 +34,8 @@
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
             android:background="@color/red"
-            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/personImage"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@id/personImage" />
 
         <TextView
             android:id="@+id/birthLabel"
@@ -44,11 +45,12 @@
             android:layout_marginEnd="20dp"
             android:fontFamily="sans-serif-medium"
             android:text="Born"
-            android:textAllCaps="true"
             android:textColor="@color/red"
             android:textSize="18sp"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view" />
+            app:layout_constraintTop_toBottomOf="@id/view"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/birthDate"
@@ -62,7 +64,7 @@
             android:gravity="start|end"
             android:textColor="@color/white"
             android:textSize="15sp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/birthLabel"
             tools:text="11-09-1990"
@@ -80,11 +82,9 @@
             android:gravity="start|end"
             android:textColor="@color/white"
             android:textSize="15sp"
-            android:visibility="visible"
             app:layout_constraintStart_toEndOf="@id/birthDate"
             app:layout_constraintTop_toBottomOf="@id/birthLabel"
-            tools:text="at Athens"
-            tools:visibility="visible" />
+            tools:text="at Athens" />
 
         <TextView
             android:id="@+id/deathLabel"
@@ -95,10 +95,9 @@
             android:layout_marginEnd="20dp"
             android:fontFamily="sans-serif-medium"
             android:text="Died"
-            android:textAllCaps="true"
             android:textColor="@color/red"
             android:textSize="18sp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/birthDate"
             tools:visibility="visible" />
@@ -130,13 +129,10 @@
             android:layout_marginEnd="20dp"
             android:fontFamily="sans-serif-medium"
             android:text="Biography"
-            android:textAllCaps="true"
             android:textColor="@color/red"
             android:textSize="18sp"
-            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/deathDate"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@id/deathDate" />
 
         <TextView
             android:id="@+id/biography"
@@ -150,15 +146,109 @@
             android:gravity="start|end"
             android:textColor="@color/white"
             android:textSize="15sp"
-            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bioLabel"
             tools:text="Daniel Jacob Radcliffe (born 23 July 1989) is an English actor who rose to prominence
             playing the titular character in the Harry Potter film series. His work on the
             series has earned him several awards and more than £60 million.\n\nRadcliffe
             made his acting debut at age ten in BBC One's television movie David Copperfield
-             (1999), followed by his film debut in 2001's The Tailor of Panama. "
+             (1999), followed by his film debut in 2001's The Tailor of Panama. " />
+
+        <TextView
+            android:id="@+id/filmographyLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Filmography"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/biography"
             tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/actingLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/filmographyLabel"
+            tools:text="as actor"
+            tools:visibility="visible" />
+
+        <View
+            android:id="@+id/actingView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/red"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/actingLabel"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/moviesList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/actingView"
+            tools:itemCount="5"
+            tools:listitem="@layout/horiz_movie_item" />
+
+        <TextView
+            android:id="@+id/prodLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="as producer"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/moviesList"
+            tools:visibility="visible" />
+
+        <View
+            android:id="@+id/prodView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/red"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/prodLabel"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/prodsList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/prodView"
+            tools:itemCount="5"
+            tools:listitem="@layout/horiz_movie_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
