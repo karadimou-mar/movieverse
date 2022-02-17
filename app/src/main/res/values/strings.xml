@@ -13,6 +13,10 @@
     <string name="cd_theatres">Theatres</string>
     <string name="cd_account">Account</string>
 
+    <!-- Home screen-->
+    <string name="added_to_fav">Added to favourites!</string>
+    <string name="remove_from_fav">Removed from favourites!</string>
+
     <!--Movie details-->
     <string name="director">Directed by %s</string>
     <string name="writer">Written by %s</string>

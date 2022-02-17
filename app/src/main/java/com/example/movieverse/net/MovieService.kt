@@ -1,17 +1,13 @@
-package com.example.movieverse.net.search
+package com.example.movieverse.net
 
 import com.example.movieverse.model.ErrorResponse
 import com.example.movieverse.model.GenreResponse
 import com.example.movieverse.model.cast.CastDetailsResponse
 import com.example.movieverse.model.movie.MovieDetailsResponse
 import com.example.movieverse.model.search.SearchResponse
-import com.example.movieverse.net.NetworkResponse
-import com.example.movieverse.net.createRetrofitService
 import com.example.movieverse.util.Constants.API_KEY
 import com.example.movieverse.util.Constants.BASE_URL
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 private lateinit var INSTANCE: MovieService
 

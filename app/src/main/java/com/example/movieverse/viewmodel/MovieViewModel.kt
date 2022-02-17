@@ -2,6 +2,7 @@ package com.example.movieverse.viewmodel
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,8 @@ import com.example.movieverse.model.cast.CrewResponse
 import com.example.movieverse.model.movie.*
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.SearchRepository
+import com.example.movieverse.util.sortByOrder
+import com.example.movieverse.util.sortByPopularity
 import kotlinx.coroutines.launch
 
 class MovieViewModel(
@@ -53,6 +56,11 @@ class MovieViewModel(
         get() = _moviesInDb
     private val _moviesInDb =
         MutableLiveData<MutableList<MovieInDB>>()
+
+    val movieById: LiveData<MovieInDB>
+        get() = _movieById
+    private val _movieById =
+        MutableLiveData<MovieInDB>()
 
     val movieRemoved: LiveData<MovieInDB>
         get() = _movieRemoved
@@ -111,8 +119,8 @@ class MovieViewModel(
 
                     _imdbIdResult.value = details.body.externalIds?.imdbID
                     _crewResult.value = details.body.credits?.crew
-                    _castResult.value = details.body.credits?.cast
-                    _recomResult.value = details.body.recommendations?.results
+                    _castResult.value = details.body.credits?.cast?.sortByOrder()
+                    _recomResult.value = details.body.recommendations?.results?.sortByPopularity()
                 }
                 is NetworkResponse.ApiError -> {
                     Log.d(
@@ -139,10 +147,40 @@ class MovieViewModel(
         _movieId.value = ""
     }
 
+    fun clearCast() {
+        _castResult.value = emptyList()
+    }
+
     fun storeMovie(movie: MovieResponse) {
         viewModelScope.launch {
-            searchRepository.storeMovie(movie)
+            try {
+                searchRepository.storeMovie(movie)
+            } catch (error: Throwable) {
+                Log.e(TAG, "storeMovie: Cannot store movie to db", error)
+            }
         }
+    }
+
+    fun removeMovie(movieId: Int) {
+        viewModelScope.launch {
+            try {
+                searchRepository.removeMovie(movieId)
+            } catch (error: Throwable) {
+                Log.e(TAG, "storeMovie: Cannot remove movie from db", error)
+            }
+        }
+    }
+
+    fun getMovieById(movieId: Int?): MovieInDB? {
+        viewModelScope.launch {
+            try {
+                val movie = movieId?.let { searchRepository.getMovieById(it) }
+                _movieById.value = movie
+            } catch (error: Throwable) {
+                Log.e(TAG, "storeMovie: Cannot get movie by id", error)
+            }
+        }
+        return _movieById.value
     }
 
     fun getMoviesFromDb(): List<MovieInDB>? {

@@ -58,6 +58,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         getMovieDetailsById(args.selectedMovieId)
         movieViewModel.clearImdbId()
         movieViewModel.clearVideoId()
+        movieViewModel.clearCast()
 
         // for shared element transition
         binding.movieImage.transitionName = args.selectedMoviePoster
@@ -95,7 +96,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         movieViewModel.castResult.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 visibilityVisible(binding.castLabel)
-                castAdapter?.submit(it.sortByOrder())
+                castAdapter?.submit(it)
             }
         })
 
@@ -118,7 +119,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         movieViewModel.recomResult.observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 visibilityVisible(binding.recommendationsLabel)
-                recomAdapter?.submit(it.sortByPopularity())
+                recomAdapter?.submit(it)
             }
         })
 

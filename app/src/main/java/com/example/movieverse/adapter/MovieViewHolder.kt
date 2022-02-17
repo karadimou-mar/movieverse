@@ -30,9 +30,7 @@ class MovieViewHolder(
             "${POSTER_BASE_URL}${movie.posterPath}",
             R.drawable.ic_launcher_foreground
         )
-        // TODO: genres need extra GET request => /genre/movie/list
-        //binding.genre.text = "${movie.genreIds[0]}"
-
+        binding.genre.text = movie.genreIds.toGenres()
         binding.movieImage.transitionName = movie.id.toString()
         itemView.setOnClickListener {
             onMovieListener.onMovieClick(adapterPosition, binding.movieImage)

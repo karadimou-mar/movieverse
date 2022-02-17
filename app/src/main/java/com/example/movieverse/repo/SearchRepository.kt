@@ -8,7 +8,7 @@ import com.example.movieverse.model.cast.CastDetailsResponse
 import com.example.movieverse.model.movie.*
 import com.example.movieverse.model.search.SearchResponse
 import com.example.movieverse.net.NetworkResponse
-import com.example.movieverse.net.search.getMovieService
+import com.example.movieverse.net.getMovieService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -49,6 +49,17 @@ class SearchRepository(private val movieDao: MovieDao) {
     suspend fun storeMovie(movieResponse: MovieResponse): Long =
         withContext(Dispatchers.IO) {
             movieDao.insertMovie(movieResponse.toMovieInDb())
+        }
+
+    suspend fun removeMovie(movieId: Int) =
+        withContext(Dispatchers.IO) {
+            movieDao.removeMovie(movieId)
+        }
+
+
+    suspend fun getMovieById(movieId: Int): MovieInDB =
+        withContext(Dispatchers.IO) {
+            movieDao.getMovieById(movieId)
         }
 
     suspend fun getMoviesFromDb(): List<MovieInDB> =
