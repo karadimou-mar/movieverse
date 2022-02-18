@@ -20,6 +20,10 @@ class SearchViewModel(
         get() = _showProgressBar
     private val _showProgressBar = MutableLiveData<Boolean>()
 
+    val shouldShowConnectionError: LiveData<Boolean>
+        get() = _shouldShowConnectionError
+    private val _shouldShowConnectionError = MutableLiveData<Boolean>()
+
     val searchListResult: LiveData<List<MovieResponse>>
         get() = _searchListResult
     private val _searchListResult = MutableLiveData<List<MovieResponse>>()
@@ -38,6 +42,7 @@ class SearchViewModel(
                         Log.d(TAG, "Search: Success: ${movies[m]}")
                     }
                     Log.d(TAG, "Search: total results: ${movies.size}")
+                    _shouldShowConnectionError.value = false
                 }
                 is NetworkResponse.ApiError -> {
                     Log.d(
@@ -46,9 +51,11 @@ class SearchViewModel(
                     )
                 }
                 is NetworkResponse.NetworkError -> {
+                    _shouldShowConnectionError.value = true
                     Log.d(TAG, "Search: NetworkError: ${search.error.message}")
                 }
                 is NetworkResponse.UnknownError -> {
+                    _shouldShowConnectionError.value = false
                     Log.d(TAG, "UnknownError: ${search.error?.message}")
                 }
             }
@@ -66,6 +73,7 @@ class SearchViewModel(
                         Log.d(TAG, "Upcoming: Success: ${movies[m]}")
                     }
                     Log.d(TAG, "Upcoming: total results: ${movies.size}")
+                    _shouldShowConnectionError.value = false
                 }
                 is NetworkResponse.ApiError -> {
                     Log.d(
@@ -74,9 +82,11 @@ class SearchViewModel(
                     )
                 }
                 is NetworkResponse.NetworkError -> {
+                    _shouldShowConnectionError.value = true
                     Log.d(TAG, "Upcoming: NetworkError: ${search.error.message}")
                 }
                 is NetworkResponse.UnknownError -> {
+                    _shouldShowConnectionError.value = false
                     Log.d(TAG, "Upcoming: UnknownError: ${search.error?.message}")
                 }
             }

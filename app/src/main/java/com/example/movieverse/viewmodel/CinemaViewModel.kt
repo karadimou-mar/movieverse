@@ -1,0 +1,66 @@
+package com.example.movieverse.viewmodel
+
+import android.content.Context
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.movieverse.db.getMovieDatabase
+import com.example.movieverse.model.movie.MovieResponse
+import com.example.movieverse.net.NetworkResponse
+import com.example.movieverse.repo.CinemaRepository
+import com.example.movieverse.repo.SearchRepository
+import kotlinx.coroutines.launch
+
+class CinemaViewModel(
+    private val cinemaRepository: CinemaRepository
+) : ViewModel() {
+
+    val showProgressBar: LiveData<Boolean>
+        get() = _showProgressBar
+    private val _showProgressBar = MutableLiveData<Boolean>()
+
+    val shouldShowConnectionError: LiveData<Boolean>
+        get() = _shouldShowConnectionError
+    private val _shouldShowConnectionError = MutableLiveData<Boolean>()
+
+    internal fun getCinemasNearby() {
+        viewModelScope.launch {
+            when (val search = cinemaRepository.getCinemasNearby()) {
+                is NetworkResponse.Success -> {
+                    val movies = search.body.cinemas
+                    for (m in movies.indices) {
+                        Log.d(TAG, "Cinemas: Success: ${movies[m]}")
+                    }
+                    Log.d(TAG, "Cinemas: total results: ${movies.size}")
+                    _shouldShowConnectionError.value = false
+                }
+                is NetworkResponse.ApiError -> {
+                    Log.d(
+                        TAG,
+                        "Cinemas: ApiError: statusCode: ${search.body.statusCode} , statusMsg: ${search.body.statusMsg}"
+                    )
+                }
+                is NetworkResponse.NetworkError -> {
+                    _shouldShowConnectionError.value = true
+                    Log.d(TAG, "Cinemas: NetworkError: ${search.error.message}")
+                }
+                is NetworkResponse.UnknownError -> {
+                    _shouldShowConnectionError.value = false
+                    Log.d(TAG, "Cinemas: UnknownError: ${search.error?.message}")
+                }
+            }
+            _showProgressBar.value = false
+        }
+    }
+
+    companion object {
+        private val TAG = CinemaViewModel::class.java.simpleName
+    }
+}
+
+fun defaultCinemaViewModelFactory() = factory {
+    val repository = CinemaRepository()
+    CinemaViewModel(repository)
+}

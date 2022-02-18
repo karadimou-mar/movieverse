@@ -172,7 +172,7 @@ fun View.changeTouchableAreaOfView(clickableArea: View, extraSpace: Int) {
     }
 }
 
-fun View.showSnackbar(@StringRes messageRes: Int, param: String, length: Int = Snackbar.LENGTH_LONG, f: Snackbar.() -> Unit) {
+fun View.showSnackbar(@StringRes messageRes: Int, param: String = "", length: Int = Snackbar.LENGTH_LONG, f: Snackbar.() -> Unit) {
     val snackBar = Snackbar.make(this, resources.getString(messageRes, param), length)
     snackBar.f()
     snackBar.show()

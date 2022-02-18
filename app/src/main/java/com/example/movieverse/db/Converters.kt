@@ -1,22 +1,22 @@
 package com.example.movieverse.db
 
 import androidx.room.TypeConverter
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-internal class Converters {
+class Converters {
 
-    // genresIds list of Int
     @TypeConverter
-    fun fromListToString(value: List<Int>): String {
-        return value.joinToString(separator = ",")
+    fun fromListOfIntToString(value: List<Int>): String {
+        val gson = Gson()
+        val type = object : TypeToken<List<Int>>() {}.type
+        return gson.toJson(value, type)
     }
 
-    fun fromStringToList(value: String): List<Int> {
-        val list = mutableListOf<Int>()
-        value.takeIf { it.isNotBlank() }
-            ?.split(",")
-            ?.map { id: String ->
-                list.add(id.toInt())
-            }
-        return list
+    @TypeConverter
+    fun fromStringToListOfInt(value: String): List<Int> {
+        val gson = Gson()
+        val type = object : TypeToken<List<Int>>() {}.type
+        return gson.fromJson(value, type)
     }
 }

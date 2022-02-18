@@ -139,7 +139,7 @@ class PersonDetailsScreen : Fragment(), CastViewModelUser {
 
         val direction: NavDirections? =
             movieId?.let {
-                MovieDetailsScreenDirections.actionMovieDetailsScreenToMovieDetailsScreen(
+                PersonDetailsScreenDirections.actionPersonDetailsScreenToMovieDetailsScreen(
                     selectedMovieId = it,
                     selectedMoviePoster = imagePoster,
                     selectedMovieTitle = title,
@@ -162,7 +162,7 @@ class PersonDetailsScreen : Fragment(), CastViewModelUser {
 
         val direction: NavDirections? =
             movieId?.let {
-                MovieDetailsScreenDirections.actionMovieDetailsScreenToMovieDetailsScreen(
+                PersonDetailsScreenDirections.actionPersonDetailsScreenToMovieDetailsScreen(
                     selectedMovieId = it,
                     selectedMoviePoster = imagePoster,
                     selectedMovieTitle = title,

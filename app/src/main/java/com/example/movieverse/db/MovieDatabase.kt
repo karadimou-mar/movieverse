@@ -1,34 +1,28 @@
 package com.example.movieverse.db
 
 import android.content.Context
-import androidx.room.Dao
-import androidx.room.Database
-import androidx.room.Entity
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.PrimaryKey
-import androidx.room.Query
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
 
 @Entity(tableName = "movies")
 data class MovieInDB(
     @PrimaryKey
-    val id: Int,
-    val title: String,
-    val posterPath: String?,
-    val overview: String,
-    val voteAverage: Double,
-    val releaseDate: String?,
+    val id: Int = 0,
+    val title: String = "",
+    val posterPath: String? = "",
+    val overview: String = "",
+    val voteAverage: Double = 0.0,
+    val releaseDate: String? = "",
+    val genresId: List<Int> = emptyList(),
     // TODO: store videos list in db??
-    val hasVideos: Boolean,
-    val popularity: Double,
-    val job: String
-    //    @ColumnInfo(name = "genre_ids")
-//    val genreIds: ArrayList<Int>
+    // @ColumnInfo(name = "genre_ids")
+    // val genreIds: ArrayList<Int>
     //val genres: List<GenresPair>
+    val hasVideos: Boolean = false,
+    val popularity: Double = 0.0,
+    val job: String? = "",
 )
 
+// todo: remove
 @Entity(tableName = "genres")
 data class GenreInDB(
     @PrimaryKey
@@ -69,14 +63,18 @@ interface MovieDao {
 
     @Query("DELETE FROM movies")
     fun clearAll()
+
+    @Query("SELECT * FROM MOVIES WHERE id = :id")
+    suspend fun getMovieById(id: Int): MovieInDB
 }
 
 @Database(
-    version = 1,
+    version = 2,
     exportSchema = true,
     entities = [MovieInDB::class, GenreInDB::class]
 )
-//@TypeConverters(Converters::class)
+
+@TypeConverters(Converters::class)
 abstract class MovieDatabase : RoomDatabase() {
     abstract val movieDao: MovieDao
 }

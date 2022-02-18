@@ -9,7 +9,7 @@
     <item
         android:id="@+id/favorites"
         android:contentDescription="@string/cd_favorites"
-        android:icon="@drawable/ic_favorites"
+        android:icon="@drawable/ic_favorites_off"
         android:title="@string/title_favorites" />
     <item
         android:id="@+id/theatres"

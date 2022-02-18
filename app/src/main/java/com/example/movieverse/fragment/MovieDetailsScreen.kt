@@ -58,6 +58,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         getMovieDetailsById(args.selectedMovieId)
         movieViewModel.clearImdbId()
         movieViewModel.clearVideoId()
+        movieViewModel.clearCast()
 
         // for shared element transition
         binding.movieImage.transitionName = args.selectedMoviePoster

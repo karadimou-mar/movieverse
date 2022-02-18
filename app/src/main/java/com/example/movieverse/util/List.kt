@@ -3,6 +3,7 @@ package com.example.movieverse.util
 import com.example.movieverse.model.cast.CastResponse
 import com.example.movieverse.model.cast.CrewResponse
 import com.example.movieverse.model.movie.MovieResponse
+import java.time.LocalDate
 
 fun List<CrewResponse>.toDirectors(): String {
     return this
@@ -18,7 +19,16 @@ fun List<CrewResponse>.toWriters(): String {
 
 fun List<MovieResponse>.toProducers(): List<MovieResponse> {
     return this
-        .filter { it.job.contains("producer", true) }
+        .filter { it.job!!.contains("producer", true) }
+}
+
+fun List<Int>?.toGenres(): String {
+   return if (this?.isNotEmpty() == true) {
+        this
+            .firstNotNullOf { genreId -> genreId.mapGenres() }
+    } else {
+        return ""
+    }
 }
 
 fun List<CastResponse>.sortByOrder() =

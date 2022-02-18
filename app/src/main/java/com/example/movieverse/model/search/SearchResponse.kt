@@ -14,3 +14,13 @@ data class SearchResponse(
     @Json(name = "total_pages")
     val totalPages: Int
 ): Parcelable
+
+@Parcelize
+data class CinemaResponse(
+    val cinemas: List<Cinema>
+): Parcelable
+
+@Parcelize
+data class Cinema(
+    val cinema_id: Int
+): Parcelable

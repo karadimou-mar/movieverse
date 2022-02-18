@@ -12,13 +12,12 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.example.movieverse.NavigationActivity
+import com.example.movieverse.R
 import com.example.movieverse.adapter.MovieAdapter
 import com.example.movieverse.databinding.HomeScreenBinding
+import com.example.movieverse.model.movie.toMovieInDb
 import com.example.movieverse.util.*
-import com.example.movieverse.viewmodel.MovieViewModelUser
-import com.example.movieverse.viewmodel.SearchViewModelUser
-import com.example.movieverse.viewmodel.activityMovieViewModel
-import com.example.movieverse.viewmodel.activitySearchViewModel
+import com.example.movieverse.viewmodel.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
@@ -26,7 +25,8 @@ import kotlinx.coroutines.flow.launchIn
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
+class HomeScreen : Fragment(),
+    SearchViewModelUser, MovieViewModelUser, CinemaViewModelUser {
 
     private var _binding: HomeScreenBinding? = null
     private val binding
@@ -38,6 +38,7 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
 
     override val searchViewModel by activitySearchViewModel()
     override val movieViewModel by activityMovieViewModel()
+    override val cinemaViewModel by activityCinemaViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,13 +85,24 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
         })
 
         searchViewModel.upcomingListResult.observe(viewLifecycleOwner, { movies ->
+            //toggleVisibilities(binding.upcomingLyt, binding.movieLyt)
             upcomingAdapter?.submit(movies)
+        })
+
+        searchViewModel.shouldShowConnectionError.observe(viewLifecycleOwner, {
+            if (it) {
+                visibilityVisible(binding.connectionError)
+                visibilityGone(binding.moviesList, binding.upcomingList)
+            }
+             else {
+                visibilityGone(binding.connectionError)
+                visibilityVisible(binding.moviesList, binding.upcomingList)
+            }
         })
 
         searchViewModel.showProgressBar.observe(viewLifecycleOwner, {
             (activity as NavigationActivity).showProgressBar(it)
         })
-        // TODO: observe for genre
     }
 
     private fun searchMovieWhileTyping() {
@@ -109,6 +121,8 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
 
     private fun getUpcomingMovies() {
         searchViewModel.getUpcomingMovies()
+        //todo: remove to another fragment
+        //cinemaViewModel.getCinemasNearby()
     }
 
     private fun getMoviesGenres() {
@@ -171,7 +185,15 @@ class HomeScreen : Fragment(), SearchViewModelUser, MovieViewModelUser {
     }
 
     private val storeListener = MovieAdapter.OnStoreInDbListener { movie ->
-        movieViewModel.storeMovie(movie)
+        if (movieViewModel.getMovieById(movie.id) != movie.toMovieInDb()) {
+            movieViewModel.storeMovie(movie)
+            binding.homeLyt.showSnackbar(R.string.added_to_fav) {}
+//            val movieBinding = MovieItemBinding.bind(binding.upcomingList.getChildAt(0))
+//            movieBinding.favorite.isChecked = true
+        } else {
+            movie.id?.let { movieViewModel.removeMovie(it) }
+            binding.homeLyt.showSnackbar(R.string.remove_from_fav) {}
+        }
     }
 
     override fun onDestroy() {

@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieverse.databinding.MovieItemBinding
+import com.example.movieverse.db.MovieDao
 import com.example.movieverse.model.movie.MovieResponse
 
 class MovieAdapter(
+    //private val movieDao: MovieDao,
     private val onMovieListener: OnClickListener,
     private val onStoreListener: OnStoreInDbListener
 ) :
@@ -34,6 +36,7 @@ class MovieAdapter(
                 parent,
                 false
             ),
+            //movieDao,
             onMovieListener,
             onStoreListener
         )

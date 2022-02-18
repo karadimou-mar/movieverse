@@ -1,20 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-<<<<<<< HEAD
-    "identityHash": "f7cc052edd27f3cb2b8eae394464a8bc",
-    "entities": [
-      {
-        "tableName": "movies",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `posterPath` TEXT, `overview` TEXT NOT NULL, `voteAverage` REAL NOT NULL, `releaseDate` TEXT, `hasVideos` INTEGER NOT NULL, `popularity` REAL NOT NULL, `job` TEXT NOT NULL, PRIMARY KEY(`id`))",
-=======
+    "version": 2,
     "identityHash": "0c4a9a3fbc292e88acee10a86785ee26",
     "entities": [
       {
         "tableName": "movies",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `posterPath` TEXT, `overview` TEXT NOT NULL, `voteAverage` REAL NOT NULL, `releaseDate` TEXT, `genresId` TEXT NOT NULL, `hasVideos` INTEGER NOT NULL, `popularity` REAL NOT NULL, `job` TEXT, PRIMARY KEY(`id`))",
->>>>>>> add3e3402dd4ac9731909c7509edacaf37ba31d4
         "fields": [
           {
             "fieldPath": "id",
@@ -74,11 +66,7 @@
             "fieldPath": "job",
             "columnName": "job",
             "affinity": "TEXT",
-<<<<<<< HEAD
-            "notNull": true
-=======
             "notNull": false
->>>>>>> add3e3402dd4ac9731909c7509edacaf37ba31d4
           }
         ],
         "primaryKey": {
@@ -120,11 +108,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-<<<<<<< HEAD
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f7cc052edd27f3cb2b8eae394464a8bc')"
-=======
       "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0c4a9a3fbc292e88acee10a86785ee26')"
->>>>>>> add3e3402dd4ac9731909c7509edacaf37ba31d4
     ]
   }
 }
