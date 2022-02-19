@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--    TODO: add/remove title later on-->
     <item
         android:id="@+id/home"
         android:contentDescription="@string/cd_home"
@@ -12,10 +11,10 @@
         android:icon="@drawable/ic_favorites_off"
         android:title="@string/title_favorites" />
     <item
-        android:id="@+id/theatres"
-        android:contentDescription="@string/cd_theatres"
-        android:icon="@drawable/ic_theaters"
-        android:title="@string/title_theatres" />
+        android:id="@+id/cinemas"
+        android:contentDescription="@string/cd_cinemas"
+        android:icon="@drawable/ic_cinemas"
+        android:title="@string/title_cinemas" />
     <item
         android:id="@+id/account"
         android:contentDescription="@string/cd_account"

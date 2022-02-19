@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cinemas"
+    app:startDestination="@id/cinemasScreen">
+
+    <fragment
+        android:id="@+id/cinemasScreen"
+        android:name="com.example.movieverse.fragment.CinemasScreen"
+        android:label="@string/title_cinemas"
+        tools:layout="@layout/cinemas_screen" />
+</navigation>
