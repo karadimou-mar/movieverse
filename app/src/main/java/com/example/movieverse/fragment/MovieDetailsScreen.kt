@@ -45,7 +45,7 @@ class MovieDetailsScreen : Fragment(), MovieViewModelUser, CastViewModelUser {
         lifecycle.addObserver(binding.ytPlayer)
 
         sharedElementEnterTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+            TransitionInflater.from(binding.root.context).inflateTransition(android.R.transition.move)
         postponeEnterTransition(250, TimeUnit.MILLISECONDS)
         return binding.root
     }

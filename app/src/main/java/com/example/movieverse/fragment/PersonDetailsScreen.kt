@@ -40,7 +40,7 @@ class PersonDetailsScreen : Fragment(), CastViewModelUser {
     ): View {
         _binding = PersonDetailsScreenBinding.inflate(inflater, container, false)
         sharedElementEnterTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+            TransitionInflater.from(binding.root.context).inflateTransition(android.R.transition.move)
         postponeEnterTransition(250, TimeUnit.MILLISECONDS)
         return binding.root
     }

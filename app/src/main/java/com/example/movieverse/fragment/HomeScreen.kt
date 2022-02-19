@@ -47,7 +47,7 @@ class HomeScreen : Fragment(),
     ): View {
         _binding = HomeScreenBinding.inflate(inflater, container, false)
         sharedElementReturnTransition =
-            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+            TransitionInflater.from(binding.root.context).inflateTransition(android.R.transition.move)
 
         return binding.root
     }

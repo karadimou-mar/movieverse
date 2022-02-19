@@ -4,21 +4,22 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
+    //id("androidx.navigation.safeargs")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(31)
     buildToolsVersion("29.0.3")
 
     buildFeatures {
-        viewBinding = true
+        viewBinding true
     }
 
     defaultConfig {
         applicationId("com.example.movieverse")
         minSdkVersion(21)
-        targetSdkVersion(30)
+        targetSdkVersion(31)
         versionCode(1)
         versionName("1.0")
 
@@ -45,7 +46,8 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = '1.8'
+        freeCompilerArgs = ['-Xjvm-default=compatibility']
     }
 }
 
@@ -62,9 +64,9 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
     // navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.4.1")
-    implementation("androidx.navigation:navigation-ui-ktx:2.4.1")
-    implementation("androidx.navigation:navigation-runtime-ktx:2.4.1")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.0-alpha02")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.0-alpha02")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.5.0-alpha02")
 
     // network
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -75,7 +77,7 @@ dependencies {
     //kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
 
     // coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 
     // glide
     implementation("com.github.bumptech.glide:glide:4.12.0")
@@ -93,7 +95,7 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
     // youtube
-    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.23")
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.23")
 
     // for maps SDK
     implementation("com.google.android.gms:play-services-maps:18.0.2")
