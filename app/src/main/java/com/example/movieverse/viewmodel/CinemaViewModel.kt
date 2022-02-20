@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.movie.MovieResponse
+import com.example.movieverse.model.search.Cinema
+import com.example.movieverse.model.search.CinemaResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.CinemaRepository
 import com.example.movieverse.repo.SearchRepository
@@ -16,6 +18,10 @@ import kotlinx.coroutines.launch
 class CinemaViewModel(
     private val cinemaRepository: CinemaRepository
 ) : ViewModel() {
+
+    val cinemaResult: LiveData<List<Cinema>>
+        get() = _cinemaResult
+    private val _cinemaResult = MutableLiveData<List<Cinema>>()
 
     val showProgressBar: LiveData<Boolean>
         get() = _showProgressBar
@@ -29,12 +35,13 @@ class CinemaViewModel(
         viewModelScope.launch {
             when (val search = cinemaRepository.getCinemasNearby()) {
                 is NetworkResponse.Success -> {
-                    val movies = search.body.cinemas
-                    for (m in movies.indices) {
-                        Log.d(TAG, "Cinemas: Success: ${movies[m]}")
+                    val cinemas = search.body.cinemas
+                    for (m in cinemas.indices) {
+                        Log.d(TAG, "Cinemas: Success: ${cinemas[m]}")
                     }
-                    Log.d(TAG, "Cinemas: total results: ${movies.size}")
+                    _cinemaResult.value = cinemas
                     _shouldShowConnectionError.value = false
+                    _showProgressBar.value = false
                 }
                 is NetworkResponse.ApiError -> {
                     Log.d(

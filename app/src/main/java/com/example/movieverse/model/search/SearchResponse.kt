@@ -22,5 +22,12 @@ data class CinemaResponse(
 
 @Parcelize
 data class Cinema(
-    val cinema_id: Int
+    val cinema_id: Int,
+    val cinema_name: String,
+    val address: String,
+    val city: String,
+    val county: String,
+    val lat: Double,
+    val lng: Double,
+    val logo_url: String
 ): Parcelable

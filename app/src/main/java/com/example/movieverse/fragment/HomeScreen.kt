@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.launchIn
 @ExperimentalCoroutinesApi
 @FlowPreview
 class HomeScreen : Fragment(),
-    SearchViewModelUser, MovieViewModelUser, CinemaViewModelUser {
+    SearchViewModelUser, MovieViewModelUser {
 
     private var _binding: HomeScreenBinding? = null
     private val binding
@@ -38,7 +38,6 @@ class HomeScreen : Fragment(),
 
     override val searchViewModel by activitySearchViewModel()
     override val movieViewModel by activityMovieViewModel()
-    override val cinemaViewModel by activityCinemaViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -122,7 +121,6 @@ class HomeScreen : Fragment(),
     private fun getUpcomingMovies() {
         searchViewModel.getUpcomingMovies()
         //todo: remove to another fragment
-        //cinemaViewModel.getCinemasNearby()
     }
 
     private fun getMoviesGenres() {

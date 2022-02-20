@@ -4,7 +4,7 @@
     <!-- Navigation !-->
     <string name="title_home">Home</string>
     <string name="title_details">Details</string>
-    <string name="title_cinemas">Cinemas</string>
+    <string name="title_cinemas">Cinemas nearby</string>
     <string name="title_favorites">Favorites</string>
     <string name="title_cast_details">Cast Details</string>
     <string name="title_account">Account</string>

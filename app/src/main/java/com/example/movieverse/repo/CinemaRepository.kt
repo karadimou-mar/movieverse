@@ -7,7 +7,7 @@ import com.example.movieverse.net.getCinemaService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class CinemaRepository() {
+class CinemaRepository {
 
     suspend fun getCinemasNearby(): NetworkResponse<CinemaResponse, ErrorResponse> =
         withContext(Dispatchers.IO) {

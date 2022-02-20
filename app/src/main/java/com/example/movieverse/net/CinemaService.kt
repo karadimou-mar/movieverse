@@ -18,7 +18,7 @@ fun getCinemaService(): CinemaService =
 
 interface CinemaService {
 
-    @GET("cinemasNearby/?n=5")
+    @GET("cinemasNearby/?n=10")
     suspend fun getCinemasNearby(
         @Header("api-version") version: String = "v200",
         @Header("Authorization") auth: String = "Basic TUFSSV8wX1hYOmYycU9IR05iYTdtSQ==",
