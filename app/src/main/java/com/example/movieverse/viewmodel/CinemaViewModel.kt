@@ -1,18 +1,13 @@
 package com.example.movieverse.viewmodel
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movieverse.db.getMovieDatabase
-import com.example.movieverse.model.movie.MovieResponse
 import com.example.movieverse.model.search.Cinema
-import com.example.movieverse.model.search.CinemaResponse
 import com.example.movieverse.net.NetworkResponse
 import com.example.movieverse.repo.CinemaRepository
-import com.example.movieverse.repo.SearchRepository
 import kotlinx.coroutines.launch
 
 class CinemaViewModel(

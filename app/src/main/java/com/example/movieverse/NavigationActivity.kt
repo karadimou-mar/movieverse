@@ -29,7 +29,8 @@ class NavigationActivity : AppCompatActivity() {
 
         // Setup the ActionBar with navController and 3 top level destinations
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.homeScreen, R.id.favoritesScreen, R.id.cinemasScreen, R.id.accountScreen)
+            //setOf(R.id.homeScreen, R.id.favoritesScreen, R.id.cinemasScreen, R.id.settings.xml)
+            setOf(R.id.homeScreen, R.id.favoritesScreen, R.id.cinemasScreen)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
     }

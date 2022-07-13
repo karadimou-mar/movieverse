@@ -51,15 +51,26 @@ class SearchRepository(private val movieDao: MovieDao) {
             movieDao.insertMovie(movieResponse.toMovieInDb())
         }
 
-    suspend fun removeMovie(movieId: Int) =
+    // todo store id for youtube?
+//    suspend fun storeIdForYt(movieId: Int): Long =
+//        withContext(Dispatchers.IO) {
+//            movieDao.insertMovieId(movieId)
+//        }
+
+    suspend fun removeMovieByID(movieId: Int) =
         withContext(Dispatchers.IO) {
-            movieDao.removeMovie(movieId)
+            movieDao.removeMovieByID(movieId)
         }
 
 
-    suspend fun getMovieById(movieId: Int): MovieInDB =
+    suspend fun getMovieById(movieId: Int): MovieResponse =
         withContext(Dispatchers.IO) {
-            movieDao.getMovieById(movieId)
+            movieDao.getMovieById(movieId).toMovieResponse()
+        }
+
+    suspend fun isFavMovie(movieId: Int): Boolean =
+        withContext(Dispatchers.IO) {
+            movieDao.isFavMovie(movieId)
         }
 
     suspend fun getMoviesFromDb(): List<MovieInDB> =
@@ -67,10 +78,5 @@ class SearchRepository(private val movieDao: MovieDao) {
             movieDao.getMoviesList().map {
                 it
             }
-        }
-
-    suspend fun deleteMovie(movieInDB: MovieInDB) =
-        withContext(Dispatchers.IO) {
-            movieDao.removeMovie(movieInDB.id)
         }
 }

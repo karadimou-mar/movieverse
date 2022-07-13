@@ -20,8 +20,6 @@ inline fun <reified T> createRetrofitService(
         .build()
         .create(T::class.java)
 
-
-// TODO: maybe we could add other adapters later on
 val moshi: Moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()

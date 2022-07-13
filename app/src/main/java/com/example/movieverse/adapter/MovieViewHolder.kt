@@ -8,6 +8,7 @@ import com.example.movieverse.util.*
 import com.example.movieverse.util.Constants.POSTER_BASE_URL
 
 class MovieViewHolder(
+    private val isFavMovie: Boolean,
     private val binding: MovieItemBinding,
     private val onMovieListener: MovieAdapter.OnClickListener,
     private val onStoreInDbListener: MovieAdapter.OnStoreInDbListener
@@ -25,7 +26,7 @@ class MovieViewHolder(
         } else {
             visibilityGone(binding.year)
         }
-        binding.ratingBar.rating = (movie.voteAverage / 2).toFloat()
+        binding.ratingBar.rating = (movie.voteAverage.div(2)).toFloat()
         binding.movieImage.loadImage(
             "${POSTER_BASE_URL}${movie.posterPath}",
             R.drawable.ic_launcher_foreground

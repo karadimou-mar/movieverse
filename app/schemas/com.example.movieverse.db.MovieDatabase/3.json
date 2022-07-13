@@ -1,18 +1,18 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
-    "identityHash": "a2b976622bf01169089c4605655a4c10",
+    "version": 3,
+    "identityHash": "375ae76bed8f4e828f1cf5e34f295502",
     "entities": [
       {
         "tableName": "movies",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT NOT NULL, `posterPath` TEXT, `overview` TEXT NOT NULL, `voteAverage` REAL NOT NULL, `releaseDate` TEXT, `genresId` TEXT NOT NULL, `hasVideos` INTEGER NOT NULL, `popularity` REAL NOT NULL, `job` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `title` TEXT NOT NULL, `posterPath` TEXT NOT NULL, `overview` TEXT NOT NULL, `voteAverage` REAL NOT NULL, `releaseDate` TEXT, `genresId` TEXT NOT NULL, `hasVideos` INTEGER NOT NULL, `popularity` REAL NOT NULL, `job` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "title",
@@ -24,7 +24,7 @@
             "fieldPath": "posterPath",
             "columnName": "posterPath",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "overview",
@@ -66,7 +66,7 @@
             "fieldPath": "job",
             "columnName": "job",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -82,7 +82,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a2b976622bf01169089c4605655a4c10')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '375ae76bed8f4e828f1cf5e34f295502')"
     ]
   }
 }

@@ -15,7 +15,7 @@ import com.example.movieverse.NavigationActivity
 import com.example.movieverse.R
 import com.example.movieverse.adapter.MovieAdapter
 import com.example.movieverse.databinding.HomeScreenBinding
-import com.example.movieverse.model.movie.toMovieInDb
+import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.util.*
 import com.example.movieverse.viewmodel.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,8 +64,7 @@ class HomeScreen : Fragment(),
             it.hideKeyboard(context)
         }
         //search also while typing
-        //TODO: keep both?
-        //searchMovieWhileTyping()
+        searchMovieWhileTyping()
 
         // When user hits back button transition takes backward
         postponeEnterTransition()
@@ -128,9 +127,9 @@ class HomeScreen : Fragment(),
     }
 
     private fun initAdapters() {
-        searchAdapter = MovieAdapter(searchItemListener, storeListener)
+        searchAdapter = MovieAdapter(false,searchItemListener, storeListener)
         binding.moviesList.initRecyclerView(customAdapter = searchAdapter)
-        upcomingAdapter = MovieAdapter(upcomingItemListener, storeListener)
+        upcomingAdapter = MovieAdapter(false, upcomingItemListener, storeListener)
         binding.upcomingList.initRecyclerView(customAdapter = upcomingAdapter)
 
     }
@@ -183,13 +182,11 @@ class HomeScreen : Fragment(),
     }
 
     private val storeListener = MovieAdapter.OnStoreInDbListener { movie ->
-        if (movieViewModel.getMovieById(movie.id) != movie.toMovieInDb()) {
+        if (movie.id?.let { movieViewModel.getMovieById(it) } != movie) {
             movieViewModel.storeMovie(movie)
             binding.homeLyt.showSnackbar(R.string.added_to_fav) {}
-//            val movieBinding = MovieItemBinding.bind(binding.upcomingList.getChildAt(0))
-//            movieBinding.favorite.isChecked = true
         } else {
-            movie.id?.let { movieViewModel.removeMovie(it) }
+            movie.id.let { movieViewModel.removeMovieByID(it) }
             binding.homeLyt.showSnackbar(R.string.remove_from_fav) {}
         }
     }

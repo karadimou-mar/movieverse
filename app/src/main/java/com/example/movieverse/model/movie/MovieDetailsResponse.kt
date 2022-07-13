@@ -3,6 +3,7 @@ package com.example.movieverse.model.movie
 import android.os.Parcelable
 import com.example.movieverse.model.cast.CreditsResponse
 import com.example.movieverse.model.search.SearchResponse
+import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.Json
 import kotlinx.parcelize.Parcelize
 

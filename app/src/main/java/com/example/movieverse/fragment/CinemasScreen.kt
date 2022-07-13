@@ -2,7 +2,6 @@ package com.example.movieverse.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,26 +13,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.movieverse.adapter.CustomInfoWindowAdapter
-import com.example.movieverse.util.toggleVisibilities
-import com.example.movieverse.viewmodel.CinemaViewModel
 import com.example.movieverse.viewmodel.CinemaViewModelUser
 import com.example.movieverse.viewmodel.activityCinemaViewModel
-import com.example.movieverse.viewmodel.activityMovieViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-
 import android.graphics.Bitmap
 import android.graphics.Canvas
-
 import androidx.core.content.ContextCompat
-
-import android.graphics.drawable.Drawable
 import com.example.movieverse.NavigationActivity
-
 import com.google.android.gms.maps.model.BitmapDescriptor
-
-
-
-
 
 class CinemasScreen : Fragment(), OnMapReadyCallback, CinemaViewModelUser {
 
@@ -96,13 +83,13 @@ class CinemasScreen : Fragment(), OnMapReadyCallback, CinemaViewModelUser {
         cinemaViewModel.cinemaResult.observe(viewLifecycleOwner, { cinemas ->
             for (i in cinemas.indices) {
                 locationsMap[cinemas[i].lat] = cinemas[i].lng
-                    mMap?.addMarker(
-                        MarkerOptions()
-                            .icon(bitmapFromVector(binding.root.context, R.drawable.ic_cinema_map))
-                            .position(LatLng(cinemas[i].lat, cinemas[i].lng))
-                            .title(cinemas[i].cinema_name)
-                            .snippet(cinemas[i].address)
-                    )
+                mMap?.addMarker(
+                    MarkerOptions()
+                        .icon(bitmapFromVector(binding.root.context, R.drawable.ic_cinema_map))
+                        .position(LatLng(cinemas[i].lat, cinemas[i].lng))
+                        .title(cinemas[i].cinema_name)
+                        .snippet(cinemas[i].address)
+                )
             }
         })
 

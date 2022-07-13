@@ -26,6 +26,6 @@ interface CinemaService {
         @Header("x-api-key") apikey: String = "G5yU53b2VlPAvlql2Mkq8RJ3ZqhXlo82iVMG2m10",
         @Header("territory") territory: String = "XX",
         @Header("geolocation") coords: String = "-22.0;14.0",
-        @Header("device-datetime") datetime: String = "2022-02-17T12:07:57.296Z",
+        @Header("device-datetime") datetime: String = "2022-08-17T12:07:57.296Z",
     ): NetworkResponse<CinemaResponse, ErrorResponse>
 }

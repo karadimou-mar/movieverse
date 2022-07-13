@@ -57,14 +57,14 @@ class MovieViewModel(
     private val _moviesInDb =
         MutableLiveData<MutableList<MovieInDB>>()
 
-    val movieById: LiveData<MovieInDB>
+    val movieById: LiveData<MovieResponse>
         get() = _movieById
     private val _movieById =
-        MutableLiveData<MovieInDB>()
+        MutableLiveData<MovieResponse>()
 
-    val movieRemoved: LiveData<MovieInDB>
+    val movieRemoved: MutableLiveData<MovieInDB?>
         get() = _movieRemoved
-    private val _movieRemoved = MutableLiveData<MovieInDB>()
+    private val _movieRemoved = MutableLiveData<MovieInDB?>()
 
     val castResult: LiveData<List<CastResponse>>
         get() = _castResult
@@ -110,9 +110,9 @@ class MovieViewModel(
                     Log.d(TAG, "MovieDetails: Success: ${details.body}")
                     // youtube video
                     if (_movieDetailsResult.value!!.videos?.results?.isNotEmpty() == true
-                        && _movieDetailsResult.value!!.videos?.results?.get(0)?.official == true
+                        //&& _movieDetailsResult.value!!.videos?.results?.get(0)?.official == true
                     ) {
-                        _movieId.value = _movieDetailsResult.value!!.videos?.results?.get(0)?.key
+                        _movieId.value = _movieDetailsResult.value!!.videos?.results?.get(0)?.key ?: ""
                     } else {
                         _movieId.value = ""
                     }
@@ -161,20 +161,32 @@ class MovieViewModel(
         }
     }
 
-    fun removeMovie(movieId: Int) {
+//    fun storeIdForYt(movieId: Int) {
+//        viewModelScope.launch {
+//            try {
+//                searchRepository.storeIdForYt(movieId)
+//            } catch (error: Throwable) {
+//                Log.e(TAG, "storeMovie: Cannot store movie to db", error)
+//            }
+//        }
+//    }
+
+    fun removeMovieByID(movieId: Int) {
         viewModelScope.launch {
             try {
-                searchRepository.removeMovie(movieId)
+                searchRepository.removeMovieByID(movieId)
             } catch (error: Throwable) {
                 Log.e(TAG, "storeMovie: Cannot remove movie from db", error)
             }
         }
     }
 
-    fun getMovieById(movieId: Int?): MovieInDB? {
+    fun getMovieById(movieId: Int): MovieResponse? {
         viewModelScope.launch {
             try {
-                val movie = movieId?.let { searchRepository.getMovieById(it) }
+                val movie = movieId.let {
+                    searchRepository.getMovieById(it)
+                }
                 _movieById.value = movie
             } catch (error: Throwable) {
                 Log.e(TAG, "storeMovie: Cannot get movie by id", error)
@@ -203,7 +215,7 @@ class MovieViewModel(
                 val movies = moviesInDb.value
                 movies?.forEachIndexed { index, movieInDB ->
                     if (index == position) {
-                        searchRepository.deleteMovie(movieInDB)
+                        movieInDB.id?.let { searchRepository.removeMovieByID(it) }
                         _moviesInDb.value?.removeAt(index)
                         _movieRemoved.value = movieInDB
                     }

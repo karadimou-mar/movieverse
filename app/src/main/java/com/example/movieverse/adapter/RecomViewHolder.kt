@@ -15,7 +15,7 @@ class HorMovieViewHolder(
 
     fun bind(movie: MovieResponse) {
         binding.recTitle.text = movie.title
-        binding.recRating.text = movie.voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble().toString()
+        binding.recRating.text = movie.voteAverage?.toBigDecimal()?.setScale(1, RoundingMode.UP)?.toDouble().toString()
         binding.recImage.loadImage(
             "${POSTER_BASE_URL}${movie.posterPath}",
             R.drawable.ic_launcher_foreground

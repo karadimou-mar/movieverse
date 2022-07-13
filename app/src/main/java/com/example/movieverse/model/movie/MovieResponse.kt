@@ -26,17 +26,16 @@ data class MovieResponse(
 ) : Parcelable
 
 fun MovieResponse.toMovieInDb() = MovieInDB(
-    id!!,
+    id ?: -1,
     title,
-    posterPath,
+    posterPath ?: "",
     overview,
     voteAverage,
     releaseDate,
     genreIds,
     hasVideo,
     popularity,
-    job
-// TODO: save videos in db??
+    job ?: ""
 )
 
 fun MovieInDB.toMovieResponse() = MovieResponse(

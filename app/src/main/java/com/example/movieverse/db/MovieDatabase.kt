@@ -6,20 +6,16 @@ import androidx.room.*
 @Entity(tableName = "movies")
 data class MovieInDB(
     @PrimaryKey
-    val id: Int = 0,
-    val title: String = "",
-    val posterPath: String? = "",
-    val overview: String = "",
-    val voteAverage: Double = 0.0,
-    val releaseDate: String? = "",
-    val genresId: List<Int> = emptyList(),
-    // TODO: store videos list in db??
-    // @ColumnInfo(name = "genre_ids")
-    // val genreIds: ArrayList<Int>
-    //val genres: List<GenresPair>
-    val hasVideos: Boolean = false,
-    val popularity: Double = 0.0,
-    val job: String? = "",
+    val id: Int?,
+    val title: String,
+    val posterPath: String,
+    val overview: String,
+    val voteAverage: Double,
+    val releaseDate: String?,
+    val genresId: List<Int>,
+    val hasVideos: Boolean,
+    val popularity: Double,
+    val job: String,
 )
 
 // todo: remove
@@ -46,14 +42,12 @@ data class VideosInDB(
 
 @Dao
 interface MovieDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movieInDB: MovieInDB): Long
 
-    @Query("SELECT * FROM movies")
-    suspend fun getMovieFromDb(): List<MovieInDB>
-
-    @Query("DELETE FROM movies WHERE id = :id")
-    suspend fun removeMovie(id: Int)
+    @Query("SELECT * FROM MOVIES WHERE id = :id")
+    suspend fun getMovieById(id: Int): MovieInDB
 
     @Query("SELECT * FROM movies")
     fun getMoviesList(): List<MovieInDB>
@@ -61,19 +55,21 @@ interface MovieDao {
     @Query("SELECT id FROM movies")
     fun getMoviesId(): List<Int>
 
-    @Query("DELETE FROM movies")
-    fun clearAll()
+    @Query("SELECT EXISTS(SELECT * FROM movies WHERE id = :id)")
+    fun isFavMovie(id: Int): Boolean
 
-    @Query("SELECT * FROM MOVIES WHERE id = :id")
-    suspend fun getMovieById(id: Int): MovieInDB
+    @Query("DELETE FROM movies WHERE id = :id")
+    suspend fun removeMovieByID(id: Int)
+
+    @Delete
+    fun deleteAllMovies(movies: MovieInDB)
 }
 
 @Database(
-    version = 2,
+    version = 3,
     exportSchema = true,
-    entities = [MovieInDB::class, GenreInDB::class]
+    entities = [MovieInDB::class]
 )
-
 @TypeConverters(Converters::class)
 abstract class MovieDatabase : RoomDatabase() {
     abstract val movieDao: MovieDao
