@@ -2,13 +2,16 @@ package com.example.movieverse.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieverse.databinding.FavMovieItemBinding
 import com.example.movieverse.db.MovieInDB
 
-class FavAdapter :
+class FavAdapter(
+    private val onFavMovieListener: OnClickListener
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var deletedMovie: MovieInDB? = null
@@ -32,7 +35,8 @@ class FavAdapter :
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            onFavMovieListener
         )
     }
 
@@ -53,5 +57,14 @@ class FavAdapter :
     fun deleteMovieFromDb(position: Int) {
         deletedMovie = differ.currentList[position]
         deletedPosition = position
+    }
+
+    class OnClickListener(
+        val clickListener: (Int) -> Unit
+    ) {
+        fun onFavMovieListener(
+            // this is for youtube loading
+            movieId: Int
+        ) = clickListener(movieId)
     }
 }

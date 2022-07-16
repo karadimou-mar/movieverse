@@ -9,5 +9,20 @@
         android:id="@+id/favoritesScreen"
         android:name="com.example.movieverse.fragment.FavoritesScreen"
         android:label="@string/title_favorites"
-        tools:layout="@layout/favorites_screen" />
+        tools:layout="@layout/favorites_screen" >
+        <action
+            android:id="@+id/action_FavoritesScreen_to_FavVideoDialog"
+            app:destination="@+id/favVideoDialog" />
+    </fragment>
+
+    <dialog
+        android:id="@id/favVideoDialog"
+        android:name="com.example.movieverse.fragment.FavouritesVideoDialog"
+        android:label="FavVideoDialog"
+        tools:layout="@layout/favourites_video_dialog" >
+        <argument
+            android:name="movieId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </dialog>
 </navigation>

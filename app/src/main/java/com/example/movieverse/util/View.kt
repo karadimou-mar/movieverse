@@ -1,9 +1,13 @@
 package com.example.movieverse.util
 
+import android.app.Activity
 import android.content.Context
+import android.graphics.Outline
 import android.graphics.Rect
+import android.util.TypedValue
 import android.view.TouchDelegate
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -17,6 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
@@ -126,7 +133,7 @@ private fun RecyclerView.addDivider(@DrawableRes drawableRes: Int) {
             state: RecyclerView.State
         ) {
             val position = parent.getChildAdapterPosition(view)
-            if (position == state.itemCount -1) {
+            if (position == state.itemCount - 1) {
                 outRect.setEmpty()
             } else {
                 super.getItemOffsets(outRect, view, parent, state)
@@ -135,8 +142,8 @@ private fun RecyclerView.addDivider(@DrawableRes drawableRes: Int) {
     }
     val drawable = ContextCompat.getDrawable(context, drawableRes)
     drawable?.let {
-            divider.setDrawable(it)
-            addItemDecoration(divider)
+        divider.setDrawable(it)
+        addItemDecoration(divider)
     }
 }
 
@@ -148,6 +155,7 @@ private fun RecyclerView.addSwipeLogic(swipeCallback: (Int) -> Unit) {
     }
     ItemTouchHelper(swipeHandler).attachToRecyclerView(this)
 }
+
 fun RecyclerView.initHorizontalRecyclerView(
     @DrawableRes drawableRes: Int? = null,
     customAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?
@@ -172,9 +180,76 @@ fun View.changeTouchableAreaOfView(clickableArea: View, extraSpace: Int) {
     }
 }
 
-fun View.showSnackbar(@StringRes messageRes: Int, param: String = "", length: Int = Snackbar.LENGTH_SHORT, f: Snackbar.() -> Unit) {
+fun View.showSnackbar(
+    @StringRes messageRes: Int,
+    param: String = "",
+    length: Int = Snackbar.LENGTH_SHORT,
+    f: Snackbar.() -> Unit
+) {
     val snackBar = Snackbar.make(this, resources.getString(messageRes, param), length)
     snackBar.f()
     snackBar.show()
+}
+
+fun BottomSheetDialog.customBehavior() {
+    this.behavior.apply {
+        state = BottomSheetBehavior.STATE_COLLAPSED
+        peekHeight = 800
+//        addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+//            override fun onStateChanged(bottomSheet: View, newState: Int) {
+//                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+//                    state = BottomSheetBehavior.STATE_HIDDEN
+//                }
+//            }
+//
+//            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+//
+//        })
+    }
+}
+
+fun ConstraintLayout.bottomSheetHeight(activity: Activity, fullScreen: Boolean = false) {
+    val totalHeight = resources.displayMetrics.heightPixels
+    val tv = TypedValue()
+    if (activity.theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+        val actionBarHeight =
+            TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+        minHeight =
+            if (fullScreen) totalHeight - actionBarHeight / 2 else totalHeight - actionBarHeight
+    }
+}
+
+var View?.layoutHeight: Int
+    get() = this?.layoutParams?.height ?: 0
+    set(value) {
+        this?.layoutParams?.height = value
+        this?.requestLayout()
+    }
+
+fun View.bottomSheetHeight(activity: Activity) {
+    val totalHeight = resources.displayMetrics.heightPixels
+    val tv = TypedValue()
+    if (activity.theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+        val actionBarHeight =
+            TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+        layoutHeight = totalHeight - actionBarHeight
+    }
+}
+
+fun BottomSheetDialog.disableManualDismiss(outside: Boolean = false) {
+    this.apply {
+        behavior.isDraggable = false
+        setCanceledOnTouchOutside(outside)
+    }
+}
+
+fun View.addCurvedEdges() {
+    outlineProvider = object : ViewOutlineProvider() {
+
+        override fun getOutline(view: View?, outline: Outline?) {
+            outline?.setRoundRect(0, 0, view!!.width, (view.height + 40f).toInt(), 40f)
+        }
+    }
+    clipToOutline = true
 }
 

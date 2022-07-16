@@ -7,10 +7,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieverse.databinding.MovieItemBinding
-import com.example.movieverse.db.MovieDao
-import com.example.movieverse.db.getMovieDatabase
 import com.example.movieverse.model.movie.MovieResponse
-import com.example.movieverse.repo.SearchRepository
 
 class MovieAdapter(
     private val isFavMovie: Boolean,

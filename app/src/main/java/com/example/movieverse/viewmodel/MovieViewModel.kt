@@ -139,6 +139,37 @@ class MovieViewModel(
         }
     }
 
+    fun getMovieIdForYt(movieId: Int) {
+        viewModelScope.launch {
+            when (val details = searchRepository.getMovieDetailsById(movieId)) {
+                is NetworkResponse.Success -> {
+                    _movieDetailsResult.value = details.body
+                    // youtube video
+                    if (_movieDetailsResult.value!!.videos?.results?.isNotEmpty() == true
+                    //&& _movieDetailsResult.value!!.videos?.results?.get(0)?.official == true
+                    ) {
+                        _movieId.value = _movieDetailsResult.value!!.videos?.results?.get(0)?.key ?: ""
+                    } else {
+                        _movieId.value = ""
+                    }
+                }
+                is NetworkResponse.ApiError -> {
+                    Log.d(
+                        TAG,
+                        "MovieDetails: ApiError: statusCode: ${details.body.statusCode} , statusMsg: ${details.body.statusMsg}"
+                    )
+                }
+                is NetworkResponse.NetworkError -> {
+                    Log.d(TAG, "MovieDetails: NetworkError: ${details.error.message}")
+                }
+                is NetworkResponse.UnknownError -> {
+                    Log.d(TAG, "MovieDetails: UnknownError: ${details.error?.message}")
+                }
+            }
+            _showProgressBar.value = false
+        }
+    }
+
     fun clearImdbId() {
         _imdbIdResult.value = ""
     }
